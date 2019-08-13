@@ -4,6 +4,7 @@ body {
   padding: 0;
   height: 100%;
   color: #D79922;
+  font-family: "Oswald", "Arial", "sans-serif" !important;
 }
 
 /* overview map styles */
