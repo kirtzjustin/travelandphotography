@@ -237,8 +237,6 @@ require([
     editorWidgetLayerToEdit: null,
     editorWidgetLayerNotToEdit1: null,
     editorWidgetLayerNotToEdit2: null,
-    editorWidgetLayerNotToEdit3: null,
-    editorWidgetLayerNotToEdit4: null,
     filterToolLayer: null,
     filterToolLayerOverviewMap: null,
     filterToolSelectMenu: null,
@@ -946,32 +944,12 @@ require([
               deleteEnabled: false
             }
           break;
-        case 'Greenville City Limits':
-            app.editorWidgetLayerNotToEdit3 = {
-              layer: layer,
-              enabled: false,
-              addEnabled: false,
-              updateEnabled: false,
-              deleteEnabled: false
-            }
-          break;
-        case 'Greer City Limits':
-            app.editorWidgetLayerNotToEdit4 = {
-              layer: layer,
-              enabled: false,
-              addEnabled: false,
-              updateEnabled: false,
-              deleteEnabled: false
-            }
-          break;
       }
     });
     app.editorWidget.layerInfos = [
       app.editorWidgetLayerToEdit,
       app.editorWidgetLayerNotToEdit1,
       app.editorWidgetLayerNotToEdit2,
-      app.editorWidgetLayerNotToEdit3,
-      app.editorWidgetLayerNotToEdit4
     ]
 
      // FILTER TOOL LOGIC

@@ -34,6 +34,7 @@ $googleFontFamily: "Oswald";
 
 #addCustomBookmark span {
     @include transition(font-size 0.15s linear);
+    position: absolute;
 
     &:hover {
         @include transition(font-size 0.15s linear);
@@ -43,6 +44,10 @@ $googleFontFamily: "Oswald";
         @include transition(font-size 0.15s linear);
         font-size: 12px;
     }
+}
+
+#customBookmarkText {
+    margin-left: 20px;
 }
 
 #addCustomBookmark{
@@ -66,7 +71,7 @@ $googleFontFamily: "Oswald";
 
 #panelQuery>div>.panel-body {
     width: 50vw;
-    max-height: 75vh;
+    max-height: 65vh;
 }
 
 .statsCanvas {

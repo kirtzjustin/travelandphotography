@@ -13,6 +13,7 @@
   -ms-transition: font-size 0.15s linear;
   -o-transition: font-size 0.15s linear;
   transition: font-size 0.15s linear;
+  position: absolute;
 }
 #addCustomBookmark span:hover {
   -webkit-transition: font-size 0.15s linear;
@@ -27,6 +28,10 @@
   -o-transition: font-size 0.15s linear;
   transition: font-size 0.15s linear;
   font-size: 12px;
+}
+
+#customBookmarkText {
+  margin-left: 20px;
 }
 
 #addCustomBookmark {
@@ -50,7 +55,7 @@
 
 #panelQuery > div > .panel-body {
   width: 50vw;
-  max-height: 75vh;
+  max-height: 65vh;
 }
 
 .statsCanvas {
