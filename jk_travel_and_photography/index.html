@@ -6,33 +6,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
   <meta name="description" content="J. Kirtz Travel Locations">
-  <!-- <link rel="icon" href="/travelandphotography/img/favicons/favicon.ico"> -->
-  <link rel="icon" href="/img/favicons/favicon.ico">
+  <link rel="icon" href="./img/favicons/favicon.ico">
   <title>J. Kirtz Travel & Photography</title>
-
   <!-- Calcite Maps Bootstrap -->
   <link async rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-bootstrap.min-v0.8.css">
   <link async rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-arcgis-4.x.min-v0.8.css">
   <!-- Tabulator Table Plugin CSS -->
-  <!-- <link async rel="stylesheet" href="/travelandphotography/node_modules/tabulator-master/dist/css/tabulator.min.css"> -->
   <link href="https://fonts.googleapis.com/css?family=Oswald&display=swap" rel="stylesheet">
-  <link async rel="stylesheet" href="node_modules/tabulator-master/dist/css/tabulator.min.css">
+  <link async rel="stylesheet" href="./node_modules/tabulator-master/dist/css/tabulator.min.css">
   <!-- Font Awesome Icons - Basic Free Version -->
   <script src="https://kit.fontawesome.com/73f02e966f.js"></script>
-
   <!-- JHK Critical CSS  -->
-  <!-- <link rel="stylesheet" href="/travelandphotography/css/jhkcriticalcss.min.css"> -->
-  <link rel="stylesheet" href="css/jhkcriticalcss.min.css">
-
+  <link rel="stylesheet" href="./css/jhkcriticalcss.min.css">
   <!-- ArcGIS JS 4 -->
   <link rel="stylesheet" href="https://js.arcgis.com/4.12/esri/css/main.css">
-
-  <!-- <link rel="stylesheet" href="css/jhkcss.min.css"> -->
   <!-- JHK JS Scripts -->
-  <!-- <script type='text/javascript' src='/travelandphotography/js/addalphatocolor.min.js'></script>
-  <script type='text/javascript' src='/travelandphotography/js/resettabulatortable.min.js'></script> -->
-  <script type='text/javascript' src='js/addalphatocolor.min.js'></script>
-  <script type='text/javascript' src='js/resettabulatortable.min.js'></script>
+  <script type='text/javascript' src='./js/addalphatocolor.min.js'></script>
+  <script type='text/javascript' src='./js/resettabulatortable.min.js'></script>
 
 </head>
 
@@ -84,22 +74,22 @@
               class="esri-icon esri-icon-layers"></span> Layer List</a></li>
         <li><a role="menuitem" tabindex="0" data-target="#panelLegend" aria-haspopup="true"><span
               class="esri-icon esri-icon-layer-list"></span> Legend</a></li>
-        <li id='editorWidgetListItem'><a role="menuitem" tabindex="0" data-target="#panelEditor" aria-haspopup="true"><span
-              class="esri-icon esri-icon-comment"></span> Map A Message</a></li>
+        <li id='editorWidgetListItem'><a role="menuitem" tabindex="0" data-target="#panelEditor"
+            aria-haspopup="true"><span class="esri-icon esri-icon-comment"></span> Map A Message</a></li>
         <li><a role="menuitem" tabindex="0" data-target="#panelMeasure" aria-haspopup="true"><span
               class="esri-icon esri-icon-polyline"></span> Measurement</a></li>
         <li id='bookmarksWidgetListItem'><a role="menuitem" tabindex="0" data-target="#panelBookmarks"
             aria-haspopup="true"><span class="esri-icon esri-icon-bookmark"></span> My Favorite Cities</a></li>
         <li id='printWidgetListItem'><a role="menuitem" tabindex="0" data-target="#panelPrintWidget"
             aria-haspopup="true"><span class="esri-icon esri-icon-printer"></span> Print</a></li>
-        <li id='queryWidgetListItem'><a role="menuitem" tabindex="0" data-target="#panelQuery" aria-haspopup="true"><span
-              class="esri-icon esri-icon-review"></span> Query/Statistics</a></li>
+        <li id='queryWidgetListItem'><a role="menuitem" tabindex="0" data-target="#panelQuery"
+            aria-haspopup="true"><span class="esri-icon esri-icon-review"></span> Query/Statistics</a></li>
         <li><a role="menuitem" tabindex="0" data-target="#panelSketch" aria-haspopup="true"><span
               class="esri-icon esri-icon-authorize"></span> Sketch</a></li>
         <li style='border-top:1px solid rgba(50,50,50,0.25)'><a role="menuitem" tabindex="0" data-target="#panelInfo"
             aria-haspopup="true"><span class="glyphicon glyphicon-info-sign"></span> Contact Info</a></li>
-        <li id='settingsListItem'><a role="menuitem" tabindex="0" data-target="#panelSettings" aria-haspopup="true"><span
-              class="glyphicon esri-icon-settings"></span>
+        <li id='settingsListItem'><a role="menuitem" tabindex="0" data-target="#panelSettings"
+            aria-haspopup="true"><span class="glyphicon esri-icon-settings"></span>
             Settings</a></li>
 
 
@@ -177,8 +167,10 @@
       <div id="collapseInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingInfo">
         <div class="panel-body" style="text-align:center">
           <p><a href="mailto:kirtzjustin@gmail.com">kirtzjustin@gmail.com</a></p>
-          <a href="https://github.com/kirtzjustin" target="_blank"><i title='Find me on GitHub' class="fab fa-github"></i></a>
-          <a href="https://www.linkedin.com/in/justin-kirtz-b0485a9b/" target="_blank"><i title='Connect with me on LinkedIn' class="fab fa-linkedin"></i></a>
+          <a href="https://github.com/kirtzjustin" target="_blank"><i title='Find me on GitHub'
+              class="fab fa-github"></i></a>
+          <a href="https://www.linkedin.com/in/justin-kirtz-b0485a9b/" target="_blank"><i
+              title='Connect with me on LinkedIn' class="fab fa-linkedin"></i></a>
         </div>
       </div>
     </div>
@@ -710,8 +702,9 @@
                       </div>
                       <div id='jhkTable'></div>
                     </div>
-                    <div id='resetChartButton' class="resetChart esri-component esri-widget--button esri-widget btn-circle"
-                      title="Reset Table" onclick='resetTabulatorTable()'>
+                    <div id='resetChartButton'
+                      class="resetChart esri-component esri-widget--button esri-widget btn-circle" title="Reset Table"
+                      onclick='resetTabulatorTable()'>
                       <span class="esri-icon-refresh"></span>
                     </div>
                     <p id='resetChartButtonText'>Reset Chart</p>
@@ -741,64 +734,33 @@
   </div>
   <!-- /.calcite-panels -->
 
-  <!-- FOR PRODUCTION -->
   <!-- JHK CSS  -->
-  <!-- <link rel="stylesheet" href="/travelandphotography/css/jhkcss.min.css"> -->
+  <link rel="stylesheet" href="./css/jhkcss.min.css">
   <!-- jQuery JS -->
-  <!-- <script src="/travelandphotography/node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
-  <script src="/travelandphotography/node_modules/intersection-observer/intersection-observer.min.js" type="text/javascript"></script> -->
+  <script src="./node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
+  <script src="./node_modules/intersection-observer/intersection-observer.min.js" type="text/javascript"></script>
   <!-- Chart.js JS (https://www.chartjs.org/)-->
-  <!-- <script src="/travelandphotography/node_modules/Chartjs/Chart.bundle.min.js" type="text/javascript"></script> -->
-  <!-- Chart.js JS Extensions-->
-  <!-- <script src="/travelandphotography/node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js" type="text/javascript">
+  <script src="./node_modules/Chartjs/Chart.bundle.min.js" type="text/javascript"></script>
+  <script src="./node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js" type="text/javascript">
   </script>
-  <script src="/travelandphotography/node_modules/hammerjs/hammer.min.js" type="text/javascript"></script>
-  <script src="/travelandphotography/node_modules/chartjs-plugin-zoom/chartjs-plugin-zoom.min.js" type="text/javascript"></script> -->
+  <script src="./node_modules/hammerjs/hammer.min.js" type="text/javascript"></script>
+  <script src="./node_modules/chartjs-plugin-zoom/chartjs-plugin-zoom.min.js" type="text/javascript"></script>
   <!-- Tabulator Table Plugin JS (http://tabulator.info/)-->
-  <!-- <script src="/travelandphotography/node_modules/tabulator-master/dist/js/tabulator.min.js" type="text/javascript"></script>
-  <script src="/travelandphotography/node_modules/jspdf/xlsx.full.min.js" type="text/javascript"></script>
-  <script src="/travelandphotography/node_modules/jspdf/jspdf.min.js" type="text/javascript"></script>
-  <script src="/travelandphotography/node_modules/jspdf/jspdf.plugin.autotable.js" type="text/javascript"></script>
-  <script src="/travelandphotography/node_modules/momentjs/moment.min.js" type="text/javascript"></script> -->
-
+  <script src="./node_modules/tabulator-master/dist/js/tabulator.min.js" type="text/javascript"></script>
+  <script src="./node_modules/jspdf/xlsx.full.min.js" type="text/javascript"></script>
+  <script src="./node_modules/jspdf/jspdf.min.js" type="text/javascript"></script>
+  <script src="./node_modules/jspdf/jspdf.plugin.autotable.js" type="text/javascript"></script>
+  <script src="./node_modules/momentjs/moment.min.js" type="text/javascript"></script>
   <!-- dojoConfig -->
-  <!-- <script type="text/javascript" src="/travelandphotography/js/dojoConfig.min.js"></script> -->
-
+  <script type="text/javascript" src="./js/dojoConfig.min.js"></script>
   <!-- ArcGIS JS 4 -->
-  <!-- <script type="text/javascript" src="https://js.arcgis.com/4.12/"></script> -->
-  <!-- main app JS file -->
-  <!-- <script type="text/javascript" src="/travelandphotography/js/jkapp.min.js"></script>
-  <script type="text/javascript" src="/travelandphotography/js/addcustombookmark.min.js"></script>
-  <script type="text/javascript" src="/travelandphotography/js/geometryquerylogic.min.js"></script>
-  <script type="text/javascript" src="/travelandphotography/js/removesplashscreen.min.js"></script>
-  <script type="text/javascript" src="/travelandphotography/js/overviewmaptoggle.min.js"></script> -->
-
-
-
-
-
-
-  <!-- FOR TESTING -->
-  <link rel="stylesheet" href="css/jhkcss.min.css">
-  <script src="node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
-  <script src="node_modules/intersection-observer/intersection-observer.min.js" type="text/javascript"></script>
-  <script src="node_modules/Chartjs/Chart.bundle.min.js" type="text/javascript"></script>
-  <script src="node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js" type="text/javascript">
-  </script>
-  <script src="node_modules/hammerjs/hammer.min.js" type="text/javascript"></script>
-  <script src="node_modules/chartjs-plugin-zoom/chartjs-plugin-zoom.min.js" type="text/javascript"></script>
-  <script src="node_modules/tabulator-master/dist/js/tabulator.min.js" type="text/javascript"></script>
-  <script src="node_modules/jspdf/xlsx.full.min.js" type="text/javascript"></script>
-  <script src="node_modules/jspdf/jspdf.min.js" type="text/javascript"></script>
-  <script src="node_modules/jspdf/jspdf.plugin.autotable.js" type="text/javascript"></script>
-  <script src="node_modules/momentjs/moment.min.js" type="text/javascript"></script>
-  <script type="text/javascript" src="js/dojoConfig.min.js"></script>
   <script type="text/javascript" src="https://js.arcgis.com/4.12/"></script>
-  <script type="text/javascript" src="js/jkapp.min.js"></script>
-  <script type="text/javascript" src="js/addcustombookmark.min.js"></script>
-  <script type="text/javascript" src="js/geometryquerylogic.min.js"></script>
-  <script type="text/javascript" src="js/removesplashscreen.min.js"></script>
-  <script type="text/javascript" src="js/overviewmaptoggle.min.js"></script>
+  <!-- main app JS files -->
+  <script type="text/javascript" src="./js/jkapp.min.js"></script>
+  <script type="text/javascript" src="./js/addcustombookmark.min.js"></script>
+  <script type="text/javascript" src="./js/geometryquerylogic.min.js"></script>
+  <script type="text/javascript" src="./js/removesplashscreen.min.js"></script>
+  <script type="text/javascript" src="./js/overviewmaptoggle.min.js"></script>
 
 </body>
 
