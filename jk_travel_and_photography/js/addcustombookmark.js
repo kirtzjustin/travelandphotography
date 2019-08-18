@@ -6,7 +6,7 @@ function addCustomBookmark() {
     let newListItemTextSpan = document.createElement('span');
     let newListItemIconSpan = document.createElement('span');
     let newListItemTextSpanText = document.createTextNode('Custom Bookmark ' + String(app.bookmarkCounter));
-    // closure to preserve extent
+    // IIFE to preserve extent
     let bookmarkExtent = (() => app.activeView.extent)();
 
     newListItemTextSpan.classList.add('esri-bookmarks__bookmark-name');
