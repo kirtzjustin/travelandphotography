@@ -29,7 +29,7 @@ function formatDate(date) {
 function queryLayerViewStats(buffer) {
 
     // MAKE SURE TO CONVERT ANY DATETIME FIELDS TO UTC TIME ZONE VIA THE ARCMAP TOOL 'CONVERT TIME ZONE' IN THE DATA MANAGEMENT TOOLBOX IN ARCTOOLBOX
-    let dataFields = ["Google_Map", "Location", "Published", "Title", "Updated"];
+    let dataFields = ["Google Map", "Location", "Published", "Title", "Updated"];
 
     // tableData is used for tabulator table
     let tableData = [];
@@ -127,6 +127,7 @@ function updateCharts(
     response,
     canvasel1
 ) {
+    console.log('here')
     // feature count and table
     let updatedDataCount = response.updatedDataCount;
     let titleCount = response.titleCount;
