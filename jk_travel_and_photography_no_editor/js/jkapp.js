@@ -233,16 +233,16 @@ require([
     ipad12MiniAir: null,
     elevationToggleDiv: null,
     elevationToggle: null,
-    editorWidget: null,
-    editorWidgetLayerToEdit: null,
-    editorWidgetLayerNotToEdit1: null,
-    editorWidgetLayerNotToEdit2: null,
+    // editorWidget: null,
+    // editorWidgetLayerToEdit: null,
+    // editorWidgetLayerNotToEdit1: null,
+    // editorWidgetLayerNotToEdit2: null,
+    // editorWidgetListItem: null,
     filterToolLayer: null,
     filterToolLayerOverviewMap: null,
     filterToolSelectMenu: null,
     filterToolSelectMenuLabel: null,
-    filterToolField: null,
-    editorWidgetListItem: null
+    filterToolField: null
   };
 
   // graphics laye for sketch widget
@@ -269,7 +269,7 @@ require([
   // Map 
   app.map = new WebMap({
     portalItem: {
-      id: "26e92943be784b129ab8cdb812317f3f"
+      id: "701743de5dfe42f5aa4fd06e185eb322"
     },
     layers: [app.sketchWidgetGraphicsLayer, app.queryGraphicsLayer]
   });
@@ -277,7 +277,7 @@ require([
   // overview map and map/scene views
   app.overviewMap = new WebMap({
     portalItem: {
-      id: 'f1e51031fd1849eab2877eca1917366c'
+      id: '957e0ef0d5bc45eeae43e148434e1bfe'
     }
   });
   // disable overview map popups
@@ -459,9 +459,9 @@ require([
 
   app.querySketchWidget = new Sketch({});
 
-  app.editorWidget = new Editor({
-    container: 'editorDiv'
-  });
+  // app.editorWidget = new Editor({
+  //   container: 'editorDiv'
+  // });
 
 
   // Creates geometries for query widget
@@ -509,7 +509,7 @@ require([
     app.sketchWidgetSketchViewModel.view = app.activeView;
     app.sketchWidget.view = app.activeView;
     app.printWidget.view = app.activeView;
-    app.editorWidget.view = app.activeView;
+    // app.editorWidget.view = app.activeView;
     // add ui components to app.activeView
     app.activeView.ui.add([{
         component: app.home,
@@ -900,57 +900,57 @@ require([
     });
 
     // define layers to be/not to be editable and add them to editor widget config
-    app.activeView.map.layers.forEach(function(layer){
-      switch(layer.title) {
-        case 'Guest Messages':
-          app.editorWidgetLayerToEdit = {
-            layer: layer,
-            deleteEnabled: false,
-            fieldConfig: [
-              {
-                name: 'name',
-                label: 'Name'
-              },
-              {
-                name: 'date',
-                label: 'Date'
-              },
-              {
-                name: 'location',
-                label: 'Your Location'
-              },
-              {
-                name: 'message',
-                label: 'Leave Me A Message'
-              }
-            ]
-          }
-          break;
-        case 'My Travel Locations':
-          app.editorWidgetLayerNotToEdit1 = {
-            layer: layer,
-            enabled: false,
-            addEnabled: false,
-            updateEnabled: false,
-            deleteEnabled: false
-          }
-          break;
-        case 'My Favorite Photos':
-            app.editorWidgetLayerNotToEdit2 = {
-              layer: layer,
-              enabled: false,
-              addEnabled: false,
-              updateEnabled: false,
-              deleteEnabled: false
-            }
-          break;
-      }
-    });
-    app.editorWidget.layerInfos = [
-      app.editorWidgetLayerToEdit,
-      app.editorWidgetLayerNotToEdit1,
-      app.editorWidgetLayerNotToEdit2,
-    ]
+    // app.activeView.map.layers.forEach(function(layer){
+    //   switch(layer.title) {
+    //     case 'Guest Messages':
+    //       app.editorWidgetLayerToEdit = {
+    //         layer: layer,
+    //         deleteEnabled: false,
+    //         fieldConfig: [
+    //           {
+    //             name: 'name',
+    //             label: 'Name'
+    //           },
+    //           {
+    //             name: 'date',
+    //             label: 'Date'
+    //           },
+    //           {
+    //             name: 'location',
+    //             label: 'Your Location'
+    //           },
+    //           {
+    //             name: 'message',
+    //             label: 'Leave Me A Message'
+    //           }
+    //         ]
+    //       }
+    //       break;
+    //     case 'My Travel Locations':
+    //       app.editorWidgetLayerNotToEdit1 = {
+    //         layer: layer,
+    //         enabled: false,
+    //         addEnabled: false,
+    //         updateEnabled: false,
+    //         deleteEnabled: false
+    //       }
+    //       break;
+    //     case 'My Favorite Photos':
+    //         app.editorWidgetLayerNotToEdit2 = {
+    //           layer: layer,
+    //           enabled: false,
+    //           addEnabled: false,
+    //           updateEnabled: false,
+    //           deleteEnabled: false
+    //         }
+    //       break;
+    //   }
+    // });
+    // app.editorWidget.layerInfos = [
+    //   app.editorWidgetLayerToEdit,
+    //   app.editorWidgetLayerNotToEdit1,
+    //   app.editorWidgetLayerNotToEdit2,
+    // ]
 
      // FILTER TOOL LOGIC
         
@@ -1049,7 +1049,7 @@ require([
         // redisplay 2D items
         app.addCustomBookmark.classList.remove('hidden');
         app.bookmarksWidgetListItem.classList.remove('hidden');
-        app.editorWidgetListItem.classList.remove('hidden');
+        // app.editorWidgetListItem.classList.remove('hidden');
         // hide 2D measure buttons, display 3D measure buttons
         app.measureWidgetButtons2D.classList.remove('hidden');
         app.measureWidgetButtons3D.classList.add('hidden');
@@ -1455,7 +1455,7 @@ require([
         app.bookmarksWidget3dWarningText[0].innerHTML = "<p>Bookmarks widget is not supported in 3D.</p>";
         app.addCustomBookmark.classList.add('hidden');
         app.bookmarksWidgetListItem.classList.add('hidden');
-        app.editorWidgetListItem.classList.add('hidden');
+        // app.editorWidgetListItem.classList.add('hidden');
 
         // create 3D area and distance measurements 
         create3DDistanceMeasureWidget();
@@ -1860,7 +1860,7 @@ require([
       "screenshot3DDiv"
       );
 
-      app.editorWidgetListItem = document.getElementById('editorWidgetListItem');
+      // app.editorWidgetListItem = document.getElementById('editorWidgetListItem');
 
     app.overviewMapToggleBox = document.getElementById(
       'overviewMapToggleBox'
