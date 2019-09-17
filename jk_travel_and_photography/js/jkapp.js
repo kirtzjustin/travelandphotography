@@ -1706,6 +1706,16 @@ require([
     syncSearch(app.activeView);
   });
 
+  query('#collapseTable').on('shown.bs.collapse', function() {
+    try{
+        if (app.statsTable !== null) {
+            app.statsTable.redraw(true);
+        }            
+    } catch(error) {
+        console.log("Error Message redraw table: ", error.message)
+    }
+});
+
   // assign element id/class names to app properties
   function assignAppProperties() {
     app.addCustomBookmark = document.getElementById(
