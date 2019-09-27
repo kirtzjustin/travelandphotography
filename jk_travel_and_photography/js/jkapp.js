@@ -770,12 +770,7 @@ require([
         } else if (event.state === "complete") {
           app.queryingIndicatorContainer.classList.remove('noVisibility');
           // this polygon will be used to query features that intersect it
-          queryLayerViewStats(app.queryPolygon).then(function (newData) {
-            updateCharts(newData,
-              'canvasCount'
-            );
-          });
-
+          startQuery(app.queryPolygon);
           app.queryLayer.queryFeatures({
             geometry: app.queryPolygon,
             outFields: ['*'],
@@ -835,11 +830,7 @@ require([
         } else if (event.state === 'active' && (event.toolEventInfo.type === 'move-stop' || event.toolEventInfo.type === 'scale-stop' || event.toolEventInfo.type === 'reshape-stop' || event.toolEventInfo.type === 'rotate-stop')) {
           // ONCE USER STOPS MOVING, SCALING, OR RESHAPING QUERY POLYGON, EXECUTE THE QUERY
           app.queryingIndicatorContainer.classList.remove('noVisibility');
-          queryLayerViewStats(queryPolygon).then(function (newData) {
-            updateCharts(newData,
-              'canvasCount'
-            );
-          });
+          startQuery(queryPolygon);
           app.queryLayer.queryFeatures({
             geometry: queryPolygon,
             outFields: ['*'],
@@ -1113,12 +1104,7 @@ require([
             } else if (event.state === "complete") {
               app.queryingIndicatorContainer.classList.remove('noVisibility');
               // this polygon will be used to query features that intersect it
-              queryLayerViewStats(app.queryPolygon).then(function (newData) {
-                updateCharts(newData,
-                  'canvasCount'
-                );
-              });
-
+              startQuery(app.queryPolygon);
               app.queryLayer.queryFeatures({
                 geometry: app.queryPolygon,
                 outFields: ['*'],
@@ -1178,11 +1164,7 @@ require([
             } else if (event.state === 'active' && (event.toolEventInfo.type === 'move-stop' || event.toolEventInfo.type === 'scale-stop' || event.toolEventInfo.type === 'reshape-stop' || event.toolEventInfo.type === 'rotate-stop')) {
               // ONCE USER STOPS MOVING, SCALING, OR RESHAPING QUERY POLYGON, EXECUTE THE QUERY
               app.queryingIndicatorContainer.classList.remove('noVisibility');
-              queryLayerViewStats(queryPolygon).then(function (newData) {
-                updateCharts(newData,
-                  'canvasCount'
-                );
-              });
+              startQuery(queryPolygon);
               app.queryLayer.queryFeatures({
                 geometry: queryPolygon,
                 outFields: ['*'],
@@ -1266,12 +1248,7 @@ require([
             } else if (event.state === "complete") {
               app.queryingIndicatorContainer.classList.remove('noVisibility');
               // this polygon will be used to query features that intersect it
-              queryLayerViewStats(app.queryPolygon).then(function (newData) {
-                updateCharts(newData,
-                  'canvasCount'
-                );
-              });
-    
+              startQuery(app.queryPolygon);    
               app.queryLayer.queryFeatures({
                 geometry: app.queryPolygon,
                 outFields: ['*'],
@@ -1331,11 +1308,7 @@ require([
             } else if (event.state === 'active' && (event.toolEventInfo.type === 'move-stop' || event.toolEventInfo.type === 'scale-stop' || event.toolEventInfo.type === 'reshape-stop' || event.toolEventInfo.type === 'rotate-stop')) {
               // ONCE USER STOPS MOVING, SCALING, OR RESHAPING QUERY POLYGON, EXECUTE THE QUERY
               app.queryingIndicatorContainer.classList.remove('noVisibility');
-              queryLayerViewStats(queryPolygon).then(function (newData) {
-                updateCharts(newData,
-                  'canvasCount'
-                );
-              });
+              startQuery(queryPolygon);
               app.queryLayer.queryFeatures({
                 geometry: queryPolygon,
                 outFields: ['*'],
@@ -1585,12 +1558,7 @@ require([
               } else if (event.state === "complete") {
                 app.queryingIndicatorContainer.classList.remove('noVisibility');
                 // this polygon will be used to query features that intersect it
-                queryLayerViewStats(app.queryPolygon).then(function (newData) {
-                  updateCharts(newData,
-                    'canvasCount'
-                  );
-                });
-      
+                startQuery(app.queryPolygon);      
                 app.queryLayer.queryFeatures({
                   geometry: app.queryPolygon,
                   outFields: ['*'],
@@ -1650,11 +1618,7 @@ require([
               } else if (event.state === 'active' && (event.toolEventInfo.type === 'move-stop' || event.toolEventInfo.type === 'scale-stop' || event.toolEventInfo.type === 'reshape-stop' || event.toolEventInfo.type === 'rotate-stop')) {
                 // ONCE USER STOPS MOVING, SCALING, OR RESHAPING QUERY POLYGON, EXECUTE THE QUERY
                 app.queryingIndicatorContainer.classList.remove('noVisibility');
-                queryLayerViewStats(queryPolygon).then(function (newData) {
-                  updateCharts(newData,
-                    'canvasCount'
-                  );
-                });
+                startQuery(queryPolygon);
                 app.queryLayer.queryFeatures({
                   geometry: queryPolygon,
                   outFields: ['*'],
@@ -1904,6 +1868,14 @@ require([
     } catch (error) {
         console.log('Error message findLayerByTitle: ', error.message)
     }        
+}
+
+function startQuery(queryPolygon) {
+  return queryLayerViewStats(queryPolygon).then(function (newData) {
+    updateCharts(newData,
+      'canvasCount'
+    );
+  })
 }
 
 // FILTER LAYERS SECTION

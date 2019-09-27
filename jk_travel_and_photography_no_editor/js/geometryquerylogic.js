@@ -127,7 +127,6 @@ function updateCharts(
     response,
     canvasel1
 ) {
-    console.log('here')
     // feature count and table
     let updatedDataCount = response.updatedDataCount;
     let titleCount = response.titleCount;
