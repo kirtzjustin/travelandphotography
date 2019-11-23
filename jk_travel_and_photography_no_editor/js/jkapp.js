@@ -541,6 +541,7 @@ require([
     })
     app.legend.view = app.activeView;
     app.bookmarksWidget.view = app.activeView;
+    app.bookmarksWidget.editingEnabled = true;
     app.coordinateConversion.view = app.activeView;
     app.coordinateConversion.formats.add(app.newCoordFormat);
     app.coordinateConversion.conversions.splice(0, 0, new Conversion({
@@ -1038,7 +1039,6 @@ require([
         app.querySketchWidget.view = app.activeView;
 
         // redisplay 2D items
-        app.addCustomBookmark.classList.remove('hidden');
         app.bookmarksWidgetListItem.classList.remove('hidden');
         // app.editorWidgetListItem.classList.remove('hidden');
         // hide 2D measure buttons, display 3D measure buttons
@@ -1428,7 +1428,6 @@ require([
 
         // hide bookmarks widget
         app.bookmarksWidget3dWarningText[0].innerHTML = "<p>Bookmarks widget is not supported in 3D.</p>";
-        app.addCustomBookmark.classList.add('hidden');
         app.bookmarksWidgetListItem.classList.add('hidden');
         // app.editorWidgetListItem.classList.add('hidden');
 
@@ -1686,9 +1685,6 @@ require([
 
   // assign element id/class names to app properties
   function assignAppProperties() {
-    app.addCustomBookmark = document.getElementById(
-      'addCustomBookmark'
-    );
     app.bookmarksWidgetListItem = document.getElementById(
       'bookmarksWidgetListItem'
     );

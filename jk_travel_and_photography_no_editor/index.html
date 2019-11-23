@@ -19,7 +19,7 @@
   <!-- JHK Critical CSS  -->
   <link rel="stylesheet" href="./css/jhkcriticalcss.min.css">
   <!-- ArcGIS JS 4 -->
-  <link rel="stylesheet" href="https://js.arcgis.com/4.12/esri/css/main.css">
+  <link rel="stylesheet" href="https://js.arcgis.com/4.13/esri/css/main.css">
   <!-- JHK JS Scripts -->
   <script type='text/javascript' src='./js/addalphatocolor.min.js'></script>
   <script type='text/javascript' src='./js/resettabulatortable.min.js'></script>
@@ -71,7 +71,7 @@
         <li><a role="menuitem" tabindex="0" data-target="#panelCoordinateConversion" aria-haspopup="true"><span
               class="esri-icon esri-icon-map-pin"></span> Coordinate Conversion</a></li>
         <li><a role="menuitem" tabindex="0" data-target="#panelLayerList" aria-haspopup="true"><span
-              class="esri-icon esri-icon-layers"></span> Layer List</a></li>
+              class="esri-icon esri-icon-layers"></span> Layer List & Filters</a></li>
         <li><a role="menuitem" tabindex="0" data-target="#panelLegend" aria-haspopup="true"><span
               class="esri-icon esri-icon-layer-list"></span> Legend</a></li>
         <!-- <li id='editorWidgetListItem'><a role="menuitem" tabindex="0" data-target="#panelEditor"
@@ -87,7 +87,7 @@
         <li><a role="menuitem" tabindex="0" data-target="#panelSketch" aria-haspopup="true"><span
               class="esri-icon esri-icon-authorize"></span> Sketch</a></li>
         <li style='border-top:1px solid rgba(50,50,50,0.25)'><a role="menuitem" tabindex="0" data-target="#panelInfo"
-            aria-haspopup="true"><span class="glyphicon glyphicon-info-sign"></span> Contact Info</a></li>
+            aria-haspopup="true"><span class="glyphicon glyphicon-info-sign"></span> About Me</a></li>
         <li id='settingsListItem'><a role="menuitem" tabindex="0" data-target="#panelSettings"
             aria-haspopup="true"><span class="glyphicon esri-icon-settings"></span>
             Settings</a></li>
@@ -159,13 +159,52 @@
         <div class="panel-title">
           <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseInfo" aria-expanded="true"
             aria-controls="collapseInfo"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span
-              class="panel-label">Contact Info</span></a>
+              class="panel-label">About Me</span></a>
           <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelInfo"><span
               class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
         </div>
       </div>
       <div id="collapseInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingInfo">
-        <div class="panel-body" style="text-align:center">
+        <div class="panel-body" id='aboutPanelBody'>
+          <p>After growing up in Charlotte, North Carolina I decided to get a change of scenery from city life and
+            attended Appalachian State University in rural Boone, North Carolina. Having a life-long interest in
+            science, I majored in Geography with a concentration in GIS (Geographic Information Systems). Upon
+            graduating college in 2010 I served as the GIS Planner for the City of Greer, SC where I was a
+            one man GIS department. During this time I discovered a passion for writing code and taught
+            myself Python and JavaScript in my spare time at home. I oversaw the implementation and development of Greer's web GIS platform using ArcGIS Server and wrote Greer's custom web-based GIS viewer using the
+            ESRI JavaScript 4.x API, <a href="https://gismaps.cityofgreer.org/mapgallery/" target="_blank">which is still in use today</a>. After seven years with Greer I decided to
+            transition to the private sector and joined SynTerra Corporation in downtown Greenville, SC as the GIS
+            Administrator specializing in GIS web development.</p>
+          <br>
+          <p>Insert photo from greer citizen here</p>
+          <p>While writing code is a relatively new passion of mine playing music has been a lifelong endeavor. I
+            started playing trombone when I was in 3rd grade and picked up the guitar in 8th grade. I was a trombone
+            player in the ASU Jazz Ensemble I, making the top jazz ensemble as a non-music major. After college I turned
+            my focus to primarily guitar. I periodically record videos for my YouTube channel which has somehow gotten a half million total views over the years.</p>
+          <iframe width="375" height="211" src="https://www.youtube.com/embed/ZQ6yw8soiuY" frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <iframe width="375" height="211" src="https://www.youtube.com/embed/1woIWz0WFsw" frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <iframe width="375" height="211" src="https://www.youtube.com/embed/SsLWIy941Sk" frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <iframe width="375" height="211" src="https://www.youtube.com/embed/7BipNDwT_mw" frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <p>I currently live in the Greenville area with my wife Allison and our beautiful daughter,
+            Scarlett. We also have two dogs; Tosche, a Rhodesian Ridgeback/Lab mix and Ava, a Yorkie.</p>
+          <div id='aboutMeImages'>
+            <figure>
+              <img class='aboutMeImage' src="http://jkirtz.x10host.com/images/alliandi.jpg" alt="Allison">
+              <p class="aboutMeImageCaption">My wife and I at Predjama Castle in Predjama, Slovenia</p>
+            </figure>
+
+            <figure>
+              <img class='aboutMeImage' src="http://jkirtz.x10host.com/images/scarlettandi.jpg" alt="Scarlett and I">
+              <p class="aboutMeImageCaption">Scarlett and I</p>
+            </figure>
+          </div>
+
+        </div>
+        <div style='text-align:center;padding-bottom: 5px;padding-top: 5px;border-top: 0.5px solid gray;'>
           <p><a href="mailto:kirtzjustin@gmail.com">kirtzjustin@gmail.com</a></p>
           <a href="https://github.com/kirtzjustin" target="_blank"><i title='Find me on GitHub'
               class="fab fa-github"></i></a>
@@ -214,7 +253,7 @@
         <div class="panel-title">
           <a class="panel-toggle collapsed" role="button" data-toggle="collapse" href="#collapseLayerList"
             aria-expanded="false" aria-controls="collapseLayerList"><span class="esri-icon esri-icon-layers"
-              aria-hidden="true"></span><span class="panel-label">Layer List</span></a>
+              aria-hidden="true"></span><span class="panel-label">Layer List & Filters</span></a>
           <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelLayerList"><span
               class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
         </div>
@@ -243,11 +282,6 @@
       <div id="collapseBookmarks" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingBookmarks">
         <div class="panel-body">
           <div id='bookmarksDiv'></div>
-          <div id='addCustomBookmark' class='esri-component esi-widget--button esri-widget btn-circle'
-            title='Create a custom bookmark' onclick='addCustomBookmark()'>
-            <span id='customBookmarkSpan' class='esri-icon-plus-circled'></span>
-            <p id='customBookmarkText'> Add Bookmark</p>
-          </div>
         </div>
       </div>
     </div>
@@ -616,6 +650,8 @@
         </div>
       </div>
       <div id="collapseQuery" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingQuery">
+        <p id="howToQueryText" style="color:green;margin:5px 0px 0px 5px;font-size:11.7px;" )="">Select a geometry
+          button and draw a shape on the map to query</p>
         <div id='queryTools'>
           <div id='geometryQueryButtons'></div>
           <div id="zoomToExtentOfQueryPoly" class="esri-component esri-widget--button esri-widget"
@@ -754,10 +790,9 @@
   <!-- dojoConfig -->
   <script type="text/javascript" src="./js/dojoConfig.min.js"></script>
   <!-- ArcGIS JS 4 -->
-  <script type="text/javascript" src="https://js.arcgis.com/4.12/"></script>
+  <script type="text/javascript" src="https://js.arcgis.com/4.13/"></script>
   <!-- main app JS files -->
   <script type="text/javascript" src="./js/jkapp.min.js"></script>
-  <script type="text/javascript" src="./js/addcustombookmark.min.js"></script>
   <script type="text/javascript" src="./js/geometryquerylogic.min.js"></script>
   <script type="text/javascript" src="./js/removesplashscreen.min.js"></script>
   <script type="text/javascript" src="./js/overviewmaptoggle.min.js"></script>

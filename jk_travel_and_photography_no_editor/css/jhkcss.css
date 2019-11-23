@@ -112,8 +112,15 @@
   display: -webkit-flex;
 }
 
+#queryIndicator {
+  margin-left: 15px;
+  width: 20px;
+  height: 20px;
+}
+
 #queryIndicatorText {
   margin-left: 5px;
+  color: red;
 }
 
 #screenshot3DDiv {
@@ -256,6 +263,7 @@
   -o-transition: color 0.15s linear;
   transition: color 0.15s linear;
   background-color: white;
+  z-index: 0;
 }
 .calcite-panels .panel > .panel-heading {
   -webkit-transition: background-color 0.15s linear;
@@ -841,6 +849,11 @@ div > div > div > div > div > #coordinateConversionDiv > div > div > .esri-selec
   color: #1A2930;
 }
 
+#aboutPanelBody {
+  text-align: center;
+  width: 900px;
+}
+
 #panelSketch label {
   color: #D79922;
 }
@@ -1080,7 +1093,49 @@ div > div > div > div > div > #coordinateConversionDiv > div > div > .esri-selec
   color: white;
 }
 
+#bookmarksDiv > div > form > label > input {
+  color: black;
+}
+
+#aboutMeImages {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.aboutMeImage {
+  -webkit-box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.4);
+  max-height: 300px;
+}
+
+.aboutMeImageCaption {
+  text-align: center;
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.screenshot_label {
+  color: #D79922;
+}
+
+.esri-ui {
+  z-index: 1;
+}
+
+.esri-ui-top-left {
+  z-index: 4;
+}
+
+.calcite-navbar {
+  z-index: 2;
+}
+
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) {
+  #printWidgetListItem {
+    display: none;
+  }
+
   #jhknav,
 .dropdown-menu {
     opacity: 1;
@@ -1088,9 +1143,21 @@ div > div > div > div > div > #coordinateConversionDiv > div > div > .esri-selec
 
   .calcite-panels {
     max-height: 250px;
+  }
+
+  #aboutPanelBody {
+    width: 100%;
+  }
+
+  #aboutMeImages {
+    display: block;
   }
 }
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) {
+  #printWidgetListItem {
+    display: none;
+  }
+
   #jhknav,
 .dropdown-menu {
     opacity: 1;
@@ -1098,6 +1165,14 @@ div > div > div > div > div > #coordinateConversionDiv > div > div > .esri-selec
 
   .calcite-panels {
     max-height: 250px;
+  }
+
+  #aboutPanelBody {
+    width: 100%;
+  }
+
+  #aboutMeImages {
+    display: block;
   }
 }
 @media only screen and (min-device-width: 834px) and (max-device-width: 834px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2) {
@@ -1105,6 +1180,10 @@ div > div > div > div > div > #coordinateConversionDiv > div > div > .esri-selec
     display: none;
   }
 
+  #printWidgetListItem {
+    display: none;
+  }
+
   #settingsListItem,
 #queryWidgetListItem {
     display: none;
@@ -1118,8 +1197,20 @@ div > div > div > div > div > #coordinateConversionDiv > div > div > .esri-selec
   .calcite-panels {
     max-height: 250px;
   }
+
+  #aboutPanelBody {
+    width: 100%;
+  }
+
+  #aboutMeImages {
+    display: block;
+  }
 }
 @media only screen and (min-device-width: 1112px) and (max-device-width: 1112px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2) {
+  #printWidgetListItem {
+    display: none;
+  }
+
   #jhknav,
 .dropdown-menu {
     opacity: 1;
@@ -1127,9 +1218,21 @@ div > div > div > div > div > #coordinateConversionDiv > div > div > .esri-selec
 
   .calcite-panels {
     max-height: 250px;
+  }
+
+  #aboutPanelBody {
+    width: 100%;
+  }
+
+  #aboutMeImages {
+    display: block;
   }
 }
 @media only screen and (min-device-width: 1024px) and (max-device-width: 1024px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2) {
+  #printWidgetListItem {
+    display: none;
+  }
+
   #jhknav,
 .dropdown-menu {
     opacity: 1;
@@ -1137,9 +1240,21 @@ div > div > div > div > div > #coordinateConversionDiv > div > div > .esri-selec
 
   .calcite-panels {
     max-height: 250px;
+  }
+
+  #aboutPanelBody {
+    width: 100%;
+  }
+
+  #aboutMeImages {
+    display: block;
   }
 }
 @media only screen and (min-device-width: 1366px) and (max-device-width: 1366px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2) {
+  #printWidgetListItem {
+    display: none;
+  }
+
   #jhknav,
 .dropdown-menu {
     opacity: 1;
@@ -1147,6 +1262,14 @@ div > div > div > div > div > #coordinateConversionDiv > div > div > .esri-selec
 
   .calcite-panels {
     max-height: 250px;
+  }
+
+  #aboutPanelBody {
+    width: 100%;
+  }
+
+  #aboutMeImages {
+    display: block;
   }
 }
 @media (min-width: 481px) and (max-width: 767px) {
@@ -1154,6 +1277,10 @@ div > div > div > div > div > #coordinateConversionDiv > div > div > .esri-selec
     display: none;
   }
 
+  #printWidgetListItem {
+    display: none;
+  }
+
   #settingsListItem,
 #queryWidgetListItem {
     display: none;
@@ -1165,7 +1292,27 @@ div > div > div > div > div > #coordinateConversionDiv > div > div > .esri-selec
   }
 
   .calcite-panels {
-    max-height: 250px;
+    max-height: 150px;
+  }
+
+  #aboutPanelBody {
+    width: 100%;
+  }
+
+  #basemapGallery,
+#bookmarksDiv,
+#coordinateConversionDiv,
+#layerListDiv,
+#legendDiv,
+#measureGroup,
+#sketchDiv,
+#panelInfo > #collapseInfo > div {
+    overflow: scroll;
+    padding-bottom: 150px;
+  }
+
+  #aboutMeImages {
+    display: block;
   }
 }
 @media (min-width: 320px) and (max-width: 480px) {
@@ -1173,6 +1320,10 @@ div > div > div > div > div > #coordinateConversionDiv > div > div > .esri-selec
     display: none;
   }
 
+  #printWidgetListItem {
+    display: none;
+  }
+
   #settingsListItem,
 #queryWidgetListItem {
     display: none;
@@ -1185,6 +1336,26 @@ div > div > div > div > div > #coordinateConversionDiv > div > div > .esri-selec
 
   .calcite-panels {
     max-height: 250px;
+  }
+
+  #aboutPanelBody {
+    width: 100%;
+  }
+
+  #basemapGallery,
+#bookmarksDiv,
+#coordinateConversionDiv,
+#layerListDiv,
+#legendDiv,
+#measureGroup,
+#sketchDiv,
+#panelInfo > #collapseInfo > div {
+    overflow: scroll;
+    padding-bottom: 200px;
+  }
+
+  #aboutMeImages {
+    display: block;
   }
 }
 
