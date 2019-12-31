@@ -45,6 +45,8 @@ require([
   "esri/widgets/Sketch/SketchViewModel",
   "esri/widgets/Sketch",
   "esri/tasks/Locator",
+  "esri/tasks/GeometryService",
+    "esri/tasks/support/ProjectParameters",
   // Calcite-maps
   "calcite-maps/calcitemaps-v0.8",
   "calcite-maps/calcitemaps-arcgis-support-v0.8",
@@ -99,6 +101,8 @@ require([
   SketchViewModel,
   Sketch,
   Locator,
+  GeometryService,
+  ProjectParameters,
   CalciteMaps,
   CalciteMapsArcGIS
 ) {
@@ -569,6 +573,11 @@ require([
             title: "Decrease Layer Opacity",
             className: "esri-icon-down",
             id: "decrease-opacity"
+          },
+          {
+            title: "Zoom To Layer's Full Extent",
+            className: "esri-icon-zoom-out-fixed",
+            id: "full-extent"
           }
         ]
       ];
@@ -584,7 +593,22 @@ require([
         if (layer.opacity > 0) {
           layer.opacity -= 0.25;
         }
-      }
+      } else if (id === 'full-extent') {
+        // if the full-extent action is triggered then navigate
+  // to the full extent of the visible layer
+  if(layer.fullExtent.spatialReference !== app.activeView.spatialReference){
+    var geomSer = new GeometryService({url: 'http://sampleserver6.arcgisonline.com/arcgis/rest/services/Utilities/Geometry/GeometryServer'});
+    var params = new ProjectParameters({
+      geometries: [layer.fullExtent],
+      outSpatialReference: app.activeView.spatialReference
+    });
+    geomSer.project(params).then(function(results){
+      app.activeView.goTo(results[0]);
+    });
+  }else{
+    app.activeView.goTo(layer.fullExtent);
+  }
+    }
     });
     // creates a clone of app.mapView's viewpoint to keep home button viewpoint consistent
     app.defaultHomeViewPoint = (() => app.mapView.viewpoint.clone())();
