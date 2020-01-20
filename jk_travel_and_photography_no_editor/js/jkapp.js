@@ -246,7 +246,8 @@ require([
     filterToolLayerOverviewMap: null,
     filterToolSelectMenu: null,
     filterToolSelectMenuLabel: null,
-    filterToolField: null
+    filterToolField: null,
+    coordinateConversionWarningText: null
   };
 
   // graphics laye for sketch widget
@@ -551,6 +552,29 @@ require([
     app.coordinateConversion.conversions.splice(0, 0, new Conversion({
       format: app.newCoordFormat
     }))
+    app.coordinateConversion.watch("mode", function (
+      newValue,
+      oldValue,
+      propertyName,
+      target
+  ) {
+      if (newValue === "capture") {
+          app.activeView.popup = null;
+          app.coordinateConversionWarningText.classList.remove('hidden');
+      } else {
+          app.coordinateConversionWarningText.classList.add('hidden');
+          app.activeView.popup = new Popup({
+              dockEnabled: true,
+              dockOptions: {
+                  position: "bottom-right",
+                  breakpoint: {
+                      width: 600,
+                      height: 1000
+                  }
+              }
+          });
+      }
+  });
     app.layerList.view = app.activeView;
     app.layerList.listItemCreatedFunction = function (e) {
       let item = e.item;
@@ -1874,6 +1898,8 @@ require([
 
         app.filterToolSelectMenu = document.getElementById('filterToolSelectMenu');
         app.filterToolSelectMenuLabel = document.getElementById('filterToolSelectMenuLabel');
+
+        app.coordinateConversionWarningText = document.getElementById('coordConversionWarning');
   }
 
   function findLayerByTitle(title, map) {

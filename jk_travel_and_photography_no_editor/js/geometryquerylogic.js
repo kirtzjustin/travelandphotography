@@ -33,12 +33,27 @@ function queryLayerViewStats(buffer) {
 
     // tableData is used for tabulator table
     let tableData = [];
+
+    let june18 = 0, july18 = 0, aug18 = 0, sep18 = 0, oct18 = 0, nov18 = 0, dec18 = 0, jan19 = 0, feb19 = 0, mar19 = 0, may19 = 0;
+
+    // let statsToQuery = ['avg']; 
+ 
+    // let statDef = [];
+    // // create stats definition array
+    // for (let i = 0; i < statsToQuery.length; i++) {
+    //     let currentStat = statsToQuery[i];
+    //     dataFields.forEach(function (fieldName) {
+    //         statDef.push({
+    //             onStatisticField: fieldName,
+    //             outStatisticFieldName: fieldName + "_" + currentStat.toUpperCase(),
+    //             statisticType: currentStat
+    //         })
+    //     })
+    // }
     // query statistics for features only in buffer polygon
     try {
 
         // query layerview to get total of each month/year date published
-        let june18 = 0, july18 = 0, aug18 = 0, sep18 = 0, oct18 = 0, nov18 = 0, dec18 = 0, jan19 = 0, feb19 = 0, mar19 = 0, may19 = 0;
-
 
         return app.queryLayerView.queryFeatures({
             // returns count of features and also populates tabulator table
