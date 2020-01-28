@@ -1019,7 +1019,7 @@ require([
      app.clusterPointLayerOverview = findLayerByTitle('My Travel Locations', 'overview');
      app.clusterPointLayer_clusterSettings = { // UPDATE WHEN DEPLOYING
          type: 'cluster',
-         clusterRadius: "60",
+         clusterRadius: "20",
          popupTemplate: {
              title: 'Cluster of {cluster_count} ' +  app.clusterPointLayer.title,
              content: "Cluster represents {cluster_count} " + app.clusterPointLayer.title
