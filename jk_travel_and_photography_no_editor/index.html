@@ -23,6 +23,7 @@
   <!-- JHK JS Scripts -->
   <script type='text/javascript' src='./js/addalphatocolor.min.js'></script>
   <script type='text/javascript' src='./js/resettabulatortable.min.js'></script>
+  <script type='text/javascript' src='./js/togglecluster.min.js'></script>
 
 </head>
 
@@ -621,6 +622,10 @@
             <label><input id="elevationToggle" type="checkbox" checked="checked">Enable Basemap
               Elevation</label>
           </div>
+          <div id="clusterDiv">
+            <label><input id="clusterInput" type="checkbox"
+                    onchange='toggleCluster()'>Enable Layer Clustering</label>
+        </div>
         </div>
       </div>
     </div>

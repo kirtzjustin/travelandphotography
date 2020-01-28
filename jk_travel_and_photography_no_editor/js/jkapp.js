@@ -247,9 +247,12 @@ require([
     filterToolSelectMenu: null,
     filterToolSelectMenuLabel: null,
     filterToolField: null,
-    coordinateConversionWarningText: null
-  };
-
+    coordinateConversionWarningText: null,
+    clusterPointLayer: null,
+    clusterPointLayerOverview: null,
+    clusterPointLayer_clusterSettings: null,
+    clusterDiv: null
+  }
   // graphics laye for sketch widget
   app.sketchWidgetGraphicsLayer = new GraphicsLayer({
     id: 'sketchWidgetGraphicsLayer'
@@ -1011,6 +1014,27 @@ require([
          setFilterLayerDefinitionExpression(option);
      });
 
+     // enable point layer clustering, if needed
+     app.clusterPointLayer = findLayerByTitle('My Travel Locations', 'main');
+     app.clusterPointLayerOverview = findLayerByTitle('My Travel Locations', 'overview');
+     app.clusterPointLayer_clusterSettings = { // UPDATE WHEN DEPLOYING
+         type: 'cluster',
+         clusterRadius: "60",
+         popupTemplate: {
+             title: 'Cluster of {cluster_count} ' +  app.clusterPointLayer.title,
+             content: "Cluster represents {cluster_count} " + app.clusterPointLayer.title
+         }
+     }
+
+     // disable clustering by default, uncomment below code if clustering should be turned on by default
+     // app.clusterPointLayer.featureReduction = app.clusterPointLayer_clusterSettings
+
+     // app.clusterPointLayerOverview.featureReduction = {
+     //     type: 'cluster',
+     //     clusterRadius: "60",
+     //     popupTemplate: null
+     // }
+
   }).then(function () {
     app.activeView.watch('extent', () => updateOverviewMapExtent(app.extentIndicator));
     app.overviewMapView.watch('extent', () => updateOverviewMapExtent(app.extentIndicator));
@@ -1099,6 +1123,7 @@ require([
 
         app.printWidgetDiv.classList.remove('hidden');
         app.elevationToggleDiv.classList.add('hidden');
+        app.clusterDiv.classList.remove('hidden');
         // reset query widget
         app.queryLayer = findLayerByTitle('My Travel Locations', 'main');
         app.queryLayer.outFields = ["*"];
@@ -1488,6 +1513,7 @@ require([
 
         app.printWidgetDiv.classList.add('hidden');
         app.elevationToggleDiv.classList.remove('hidden');
+        app.clusterDiv.classList.add('hidden');
 
 
         // 3d screenshot section
@@ -1891,6 +1917,10 @@ require([
     app.elevationToggleDiv = document.getElementById(
       "elevationToggleDiv"
       );
+
+      app.clusterDiv = document.getElementById(
+        "clusterDiv"
+        );
 
       app.elevationToggle = document.getElementById(
         'elevationToggle'

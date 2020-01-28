@@ -480,6 +480,7 @@ div > div > div > div > div > #coordinateConversionDiv > div > div > .esri-selec
 #coordinateConversionDiv__esri-coordinate-conversion__pattern-input,
 #overviewMapToggleDiv > label,
 #elevationToggleDiv > label,
+#clusterDiv > label,
 .esri-widget__heading,
 .esri-legend__layer-caption {
   -webkit-transition: color 0.15s linear;
