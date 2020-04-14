@@ -22,6 +22,7 @@ require([
   "esri/widgets/Expand",
   "esri/widgets/Popup",
   "esri/widgets/Editor",
+  "esri/widgets/FeatureTable",
   "esri/core/watchUtils",
   "esri/layers/ElevationLayer",
   "esri/layers/BaseElevationLayer",
@@ -46,7 +47,7 @@ require([
   "esri/widgets/Sketch",
   "esri/tasks/Locator",
   "esri/tasks/GeometryService",
-    "esri/tasks/support/ProjectParameters",
+  "esri/tasks/support/ProjectParameters",
   // Calcite-maps
   "calcite-maps/calcitemaps-v0.8",
   "calcite-maps/calcitemaps-arcgis-support-v0.8",
@@ -78,6 +79,7 @@ require([
   Expand,
   Popup,
   Editor,
+  FeatureTable,
   watchUtils,
   ElevationLayer,
   BaseElevationLayer,
@@ -251,7 +253,11 @@ require([
     clusterPointLayer: null,
     clusterPointLayerOverview: null,
     clusterPointLayer_clusterSettings: null,
-    clusterDiv: null
+    clusterDiv: null,
+    attributeTableLayerSelect: null,
+    attributeTable: null,
+    attributeTableLayer: null,
+    attributeTableFieldConfig: []
   }
   // graphics laye for sketch widget
   app.sketchWidgetGraphicsLayer = new GraphicsLayer({
@@ -560,24 +566,24 @@ require([
       oldValue,
       propertyName,
       target
-  ) {
+    ) {
       if (newValue === "capture") {
-          app.activeView.popup = null;
-          app.coordinateConversionWarningText.classList.remove('hidden');
+        app.activeView.popup = null;
+        app.coordinateConversionWarningText.classList.remove('hidden');
       } else {
-          app.coordinateConversionWarningText.classList.add('hidden');
-          app.activeView.popup = new Popup({
-              dockEnabled: true,
-              dockOptions: {
-                  position: "bottom-right",
-                  breakpoint: {
-                      width: 600,
-                      height: 1000
-                  }
-              }
-          });
+        app.coordinateConversionWarningText.classList.add('hidden');
+        app.activeView.popup = new Popup({
+          dockEnabled: true,
+          dockOptions: {
+            position: "bottom-right",
+            breakpoint: {
+              width: 600,
+              height: 1000
+            }
+          }
+        });
       }
-  });
+    });
     app.layerList.view = app.activeView;
     app.layerList.listItemCreatedFunction = function (e) {
       let item = e.item;
@@ -622,20 +628,22 @@ require([
         }
       } else if (id === 'full-extent') {
         // if the full-extent action is triggered then navigate
-  // to the full extent of the visible layer
-  if(layer.fullExtent.spatialReference !== app.activeView.spatialReference){
-    var geomSer = new GeometryService({url: 'http://sampleserver6.arcgisonline.com/arcgis/rest/services/Utilities/Geometry/GeometryServer'});
-    var params = new ProjectParameters({
-      geometries: [layer.fullExtent],
-      outSpatialReference: app.activeView.spatialReference
-    });
-    geomSer.project(params).then(function(results){
-      app.activeView.goTo(results[0]);
-    });
-  }else{
-    app.activeView.goTo(layer.fullExtent);
-  }
-    }
+        // to the full extent of the visible layer
+        if (layer.fullExtent.spatialReference !== app.activeView.spatialReference) {
+          var geomSer = new GeometryService({
+            url: 'http://sampleserver6.arcgisonline.com/arcgis/rest/services/Utilities/Geometry/GeometryServer'
+          });
+          var params = new ProjectParameters({
+            geometries: [layer.fullExtent],
+            outSpatialReference: app.activeView.spatialReference
+          });
+          geomSer.project(params).then(function (results) {
+            app.activeView.goTo(results[0]);
+          });
+        } else {
+          app.activeView.goTo(layer.fullExtent);
+        }
+      }
     });
     // creates a clone of app.mapView's viewpoint to keep home button viewpoint consistent
     app.defaultHomeViewPoint = (() => app.mapView.viewpoint.clone())();
@@ -900,7 +908,7 @@ require([
             // zoom to extent of query polygon, zoomed out by a factor of 2
             app.activeView.goTo(queryPolygon.extent.expand(2));
           });
-        } else if (event.state === 'cancel' || event.state === 'complete') {
+        } else if (event.state === 'aborted' || event.state === 'complete') {
           // USER EITHER COMPLETED THE POLYGON OR CLICKED OFF OF QUERY POLYGON WITHOUT MOVING IT
           // RE-ENABLE POPUPS
           try {
@@ -995,45 +1003,97 @@ require([
     //   app.editorWidgetLayerNotToEdit2,
     // ]
 
-     // FILTER TOOL LOGIC
-        
-     app.filterToolLayer = findLayerByTitle('My Favorite Photos', 'main'); // UPDATE WHEN DEPLOYING
-     app.filterToolLayerOverviewMap = findLayerByTitle('My Favorite Photos', 'overview'); // UPDATE WHEN DEPLOYING
-     app.filterToolField = "takenwith"; //UPDATE WHEN DEPLOYING
-     // query all features in app.filterToolLayer, add unique values from filter field to dropdown menu, then apply definition expression to filter app.filterToolLayer
-     app.filterToolLayer.when(function () {
-             let query = app.filterToolLayer.createQuery();
-             query.outFields = [app.filterToolField];
-             return app.filterToolLayer.queryFeatures(query);
-         })
-         .then(getUniqueValues)
-         .then(addToSelectMenu)
-     // whenever user selects new attribute to filter by in dropdown menu, apply definition expression SQL query
-     app.filterToolSelectMenu.addEventListener('change', function () {
-         let option = event.target.value;
-         setFilterLayerDefinitionExpression(option);
-     });
+    // FILTER TOOL LOGIC
 
-     // enable point layer clustering, if needed
-     app.clusterPointLayer = findLayerByTitle('My Travel Locations', 'main');
-     app.clusterPointLayerOverview = findLayerByTitle('My Travel Locations', 'overview');
-     app.clusterPointLayer_clusterSettings = { // UPDATE WHEN DEPLOYING
-         type: 'cluster',
-         clusterRadius: "20",
-         popupTemplate: {
-             title: 'Cluster of {cluster_count} ' +  app.clusterPointLayer.title,
-             content: "Cluster represents {cluster_count} " + app.clusterPointLayer.title
-         }
-     }
+    app.filterToolLayer = findLayerByTitle('My Favorite Photos', 'main'); // UPDATE WHEN DEPLOYING
+    app.filterToolLayerOverviewMap = findLayerByTitle('My Favorite Photos', 'overview'); // UPDATE WHEN DEPLOYING
+    app.filterToolField = "takenwith"; //UPDATE WHEN DEPLOYING
+    // query all features in app.filterToolLayer, add unique values from filter field to dropdown menu, then apply definition expression to filter app.filterToolLayer
+    app.filterToolLayer.when(function () {
+        let query = app.filterToolLayer.createQuery();
+        query.outFields = [app.filterToolField];
+        return app.filterToolLayer.queryFeatures(query);
+      })
+      .then(getUniqueValues)
+      .then(addToSelectMenu)
+    // whenever user selects new attribute to filter by in dropdown menu, apply definition expression SQL query
+    app.filterToolSelectMenu.addEventListener('change', function () {
+      let option = event.target.value;
+      setFilterLayerDefinitionExpression(option);
+    });
 
-     // disable clustering by default, uncomment below code if clustering should be turned on by default
-     // app.clusterPointLayer.featureReduction = app.clusterPointLayer_clusterSettings
+    // enable point layer clustering, if needed
+    app.clusterPointLayer = findLayerByTitle('My Travel Locations', 'main');
+    app.clusterPointLayerOverview = findLayerByTitle('My Travel Locations', 'overview');
+    app.clusterPointLayer_clusterSettings = { // UPDATE WHEN DEPLOYING
+      type: 'cluster',
+      clusterRadius: "20",
+      popupTemplate: {
+        title: 'Cluster of {cluster_count} ' + app.clusterPointLayer.title,
+        content: "Cluster represents {cluster_count} " + app.clusterPointLayer.title
+      }
+    }
 
-     // app.clusterPointLayerOverview.featureReduction = {
-     //     type: 'cluster',
-     //     clusterRadius: "60",
-     //     popupTemplate: null
-     // }
+    // disable clustering by default, uncomment below code if clustering should be turned on by default
+    // app.clusterPointLayer.featureReduction = app.clusterPointLayer_clusterSettings
+
+    // app.clusterPointLayerOverview.featureReduction = {
+    //     type: 'cluster',
+    //     clusterRadius: "60",
+    //     popupTemplate: null
+    // }
+
+    // ATTRIBUTE TABLE LOGIC
+    // populate layer select dropdown menu
+    for (let i = 0; i < app.activeView.map.layers.items.length; i++) {
+      if (app.activeView.map.layers.items[i].type === 'feature') {
+        let option = document.createElement('option');
+        option.text = app.activeView.map.layers.items[i].title;
+        option.value = app.activeView.map.layers.items[i].title;
+        app.attributeTableLayerSelect.add(option)
+      }
+    }
+    // add blank option to dropdown menu and have it selected by default
+    let blankOption = document.createElement('option');
+    blankOption.text = '';
+    blankOption.value = '';
+    blankOption.selected = true;
+    app.attributeTableLayerSelect.add(blankOption);
+    // when user selects layer, create attribute table
+    app.attributeTableLayerSelect.addEventListener('change', function () {
+      let selectedLayer = event.target.value;
+      app.attributeTableLayer = findLayerByTitle(selectedLayer, 'main');
+      try {
+        // create Field Config array
+        if (app.attributeTableFieldConfig.length > 0) { // clear out any existing field configs if needed
+          app.attributeTableFieldConfig = [];
+        }
+        for (let i = 0; i < app.attributeTableLayer.fields.length; i++) { // create array of objects consiting of all attributes in layer
+          app.attributeTableFieldConfig.push({
+            name: app.attributeTableLayer.fields[i].name,
+            label: app.attributeTableLayer.fields[i].name
+          })
+        }
+        // if attribute table already exists, destroy it and recreate the attribute table div
+        if (app.attributeTable) {
+          app.attributeTable.destroy();
+          let panelBody = document.getElementById('attributeTablePanelBody');
+          let attributeTable = document.createElement('div');
+          attributeTable.id = 'attributeTable';
+          panelBody.appendChild(attributeTable);
+        }
+        // create attribute table
+        app.attributeTable = new FeatureTable({
+          layer: app.attributeTableLayer,
+          fieldConfigs: app.attributeTableFieldConfig,
+          container: document.getElementById('attributeTable'),
+          // attachmentsEnabled: true
+        });
+      } catch (e) {
+        console.log('Error Message: Attribute Table: ', e.mesage)
+      }
+
+    });
 
   }).then(function () {
     app.activeView.watch('extent', () => updateOverviewMapExtent(app.extentIndicator));
@@ -1087,10 +1147,10 @@ require([
       // if overview map toggle button is turned off re-check box
       if (!app.overviewMapToggleBox.checked) {
         app.overviewMapToggleBox.checked = "checked";
-    }
+      }
 
-    // if user switched overview off, turn back on. always keep off on mobile
-    redisplayOverviewMap();
+      // if user switched overview off, turn back on. always keep off on mobile
+      redisplayOverviewMap();
 
       syncViews(app.sceneView, app.mapView);
       setActiveView(app.mapView);
@@ -1256,7 +1316,7 @@ require([
                 // zoom to extent of query polygon, zoomed out by a factor of 2
                 app.activeView.goTo(queryPolygon.extent.expand(2));
               });
-            } else if (event.state === 'cancel' || event.state === 'complete') {
+            } else if (event.state === 'aborted' || event.state === 'complete') {
               // USER EITHER COMPLETED THE POLYGON OR CLICKED OFF OF QUERY POLYGON WITHOUT MOVING IT
               // RE-ENABLE POPUPS
               try {
@@ -1287,8 +1347,8 @@ require([
             } catch (error) {
               console.log('stats widget error message: ', error.message);
             }
-    
-    
+
+
             if (event.state === 'active') {
               // remove existing buffer graphic and any highlighted features before creating new one
               try {
@@ -1300,7 +1360,7 @@ require([
               } catch (error) {
                 console.log('querySketchWidget error: ', error.message);
               }
-    
+
               // calculate area of query polygon
               app.queryMeasureArea = geometryEngine.geodesicArea(app.queryPolygon, 'square-feet');
               if (app.queryMeasureArea < 0) {
@@ -1310,7 +1370,7 @@ require([
                   app.queryMeasureArea = geometryEngine.geodesicArea(simplifiedPolygon, "square-feet");
                 }
               }
-    
+
               // if tool is circle also calculate radius
               if (event.tool === 'circle') {
                 app.queryMeasureRadius = Math.sqrt(app.queryMeasureArea / Math.PI);
@@ -1323,7 +1383,7 @@ require([
               app.queryingIndicatorContainer.classList.remove('noVisibility');
               // this polygon will be used to query features that intersect it
               startQuery(app.queryPolygon);
-    
+
               app.queryLayer.queryFeatures({
                 geometry: app.queryPolygon,
                 outFields: ['*'],
@@ -1331,12 +1391,12 @@ require([
                 returnGeometry: true
               }).then(function (results) {
                 let graphics = results.features;
-    
+
                 // remove existing highlighted features
                 if (app.highlightedFeature) {
                   app.highlightedFeature.remove();
                 }
-    
+
                 // highlight query results
                 app.highlightedFeature = layerView.highlight(graphics);
                 // zoom to extent of query polygon, zoomed out by a factor of 2
@@ -1344,7 +1404,7 @@ require([
               });
             }
           });
-    
+
           app.querySketchWidget.on('update', function (event) {
             let queryPolygon = event.graphics[0].geometry;
             if (event.state === 'start' && event.toolEventInfo === null) {
@@ -1391,7 +1451,7 @@ require([
                 returnGeometry: true
               }).then(function (results) {
                 let graphics = results.features;
-    
+
                 // remove existing highlighted features
                 if (app.highlightedFeature) {
                   app.highlightedFeature.remove();
@@ -1401,7 +1461,7 @@ require([
                 // zoom to extent of query polygon, zoomed out by a factor of 2
                 app.activeView.goTo(queryPolygon.extent.expand(2));
               });
-            } else if (event.state === 'cancel' || event.state === 'complete') {
+            } else if (event.state === 'aborted' || event.state === 'complete') {
               // USER EITHER COMPLETED THE POLYGON OR CLICKED OFF OF QUERY POLYGON WITHOUT MOVING IT
               // RE-ENABLE POPUPS
               try {
@@ -1470,10 +1530,10 @@ require([
       // if overview map toggle button is turned off re-check box
       if (!app.overviewMapToggleBox.checked) {
         app.overviewMapToggleBox.checked = "checked";
-    }
+      }
 
-    // if user switched overview off, turn back on. always keep off on mobile
-    redisplayOverviewMap();
+      // if user switched overview off, turn back on. always keep off on mobile
+      redisplayOverviewMap();
 
       syncViews(app.mapView, app.sceneView);
       setActiveView(app.sceneView);
@@ -1522,7 +1582,7 @@ require([
         // add an event listener to capture a screenshot
         app.screenshot3DButton.addEventListener("click", function () {
           let width, height, padding, innerWidth, innerHeight, options;
-          
+
           app.screenshot3DButton.classList.add("active");
 
           width = 1532;
@@ -1540,14 +1600,14 @@ require([
               height: height
             }
           };
-            
+
           app.activeView.takeScreenshot(options).then(function (screenshot) {
             // display a preview of the image
             showPreview(screenshot);
             // create the image for download
             document.getElementById("download3dScreenshotButton").onclick = function () {
               let title, dataUrl;
-              
+
               title = document.getElementById("screenshot3ddiv_title").value;
 
               // if a text exists, then add it to the image
@@ -1581,87 +1641,141 @@ require([
             app.screenshot3DDiv.classList.add("hidden");
           });
 
-          // allows user to turn elevation ground layer on/off
-          
-          app.elevationToggle.addEventListener("change", toggleElevation);
-          // if user turns off elevation and switches back to 2d re-check box once they switch back to 3d again
-          if (!app.elevationToggle.checked) {
-              app.elevationToggle.checked = "checked";
-          }
-          // reactivate query
-          app.activeView.whenLayerView(app.queryLayer).then(function (layerView) {
-            app.queryLayerView = layerView;
-            app.querySketchWidget.on("create", function (event) {
+        // allows user to turn elevation ground layer on/off
+
+        app.elevationToggle.addEventListener("change", toggleElevation);
+        // if user turns off elevation and switches back to 2d re-check box once they switch back to 3d again
+        if (!app.elevationToggle.checked) {
+          app.elevationToggle.checked = "checked";
+        }
+        // reactivate query
+        app.activeView.whenLayerView(app.queryLayer).then(function (layerView) {
+          app.queryLayerView = layerView;
+          app.querySketchWidget.on("create", function (event) {
+            try {
+              app.queryPolygon = event.graphic.geometry;
+              app.activeQueryPolygonButton = event.tool;
+            } catch (error) {
+              console.log('stats widget error message: ', error.message);
+            }
+
+
+            if (event.state === 'active') {
+              // remove existing buffer graphic and any highlighted features before creating new one
               try {
-                app.queryPolygon = event.graphic.geometry;
-                app.activeQueryPolygonButton = event.tool;
+                app.queryGraphicsLayer.removeAll();
+                if (app.highlightedFeature) {
+                  app.highlightedFeature.remove();
+                }
+                app.statsTable.clearData();
               } catch (error) {
-                console.log('stats widget error message: ', error.message);
+                console.log('querySketchWidget error: ', error.message);
               }
-      
-      
-              if (event.state === 'active') {
-                // remove existing buffer graphic and any highlighted features before creating new one
-                try {
-                  app.queryGraphicsLayer.removeAll();
-                  if (app.highlightedFeature) {
-                    app.highlightedFeature.remove();
-                  }
-                  app.statsTable.clearData();
-                } catch (error) {
-                  console.log('querySketchWidget error: ', error.message);
+
+              // calculate area of query polygon
+              app.queryMeasureArea = geometryEngine.geodesicArea(app.queryPolygon, 'square-feet');
+              if (app.queryMeasureArea < 0) {
+                // simplify the polygon if needed and calculate the area again
+                let simplifiedPolygon = geometryEngine.simplify(app.queryPolygon);
+                if (simplifiedPolygon) {
+                  app.queryMeasureArea = geometryEngine.geodesicArea(simplifiedPolygon, "square-feet");
                 }
-      
-                // calculate area of query polygon
-                app.queryMeasureArea = geometryEngine.geodesicArea(app.queryPolygon, 'square-feet');
-                if (app.queryMeasureArea < 0) {
-                  // simplify the polygon if needed and calculate the area again
-                  let simplifiedPolygon = geometryEngine.simplify(app.queryPolygon);
-                  if (simplifiedPolygon) {
-                    app.queryMeasureArea = geometryEngine.geodesicArea(simplifiedPolygon, "square-feet");
-                  }
-                }
-      
-                // if tool is circle also calculate radius
-                if (event.tool === 'circle') {
-                  app.queryMeasureRadius = Math.sqrt(app.queryMeasureArea / Math.PI);
-                } else {
-                  app.queryMeasureRadius = 0;
-                }
-                app.queryMeasureContainerArea.innerHTML = numberWithCommas(app.queryMeasureArea.toFixed(2)) + ' ft' + app.squaredSymbol;
-                app.queryMeasureContainerRadius.innerHTML = numberWithCommas(app.queryMeasureRadius.toFixed(2)) + ' ft';
-              } else if (event.state === "complete") {
-                app.queryingIndicatorContainer.classList.remove('noVisibility');
-                // this polygon will be used to query features that intersect it
-                startQuery(app.queryPolygon);
-      
-                app.queryLayer.queryFeatures({
-                  geometry: app.queryPolygon,
-                  outFields: ['*'],
-                  outSpatialReference: app.activeView.spatialReference,
-                  returnGeometry: true
-                }).then(function (results) {
-                  let graphics = results.features;
-      
-                  // remove existing highlighted features
-                  if (app.highlightedFeature) {
-                    app.highlightedFeature.remove();
-                  }
-      
-                  // highlight query results
-                  app.highlightedFeature = layerView.highlight(graphics);
-                  // zoom to extent of query polygon, zoomed out by a factor of 2
-                  app.activeView.goTo(app.queryPolygon.extent.expand(2));
-                });
               }
-            });
-      
-            app.querySketchWidget.on('update', function (event) {
-              let queryPolygon = event.graphics[0].geometry;
-              if (event.state === 'start' && event.toolEventInfo === null) {
-                // USER SELECTS QUERY POLYGON TO MOVE, SCALE, OR RESHAPE FOR FIRST TIME
-                // FIRST SET POPUP TO NULL TO PREVENT POPUP FROM OPENING WHEN USER CLICKS ON GRAPHIC TO START UPDATE THEN IMMEDIATELY RE-CREATE THE POPUP
-                app.activeView.popup = null;
+
+              // if tool is circle also calculate radius
+              if (event.tool === 'circle') {
+                app.queryMeasureRadius = Math.sqrt(app.queryMeasureArea / Math.PI);
+              } else {
+                app.queryMeasureRadius = 0;
+              }
+              app.queryMeasureContainerArea.innerHTML = numberWithCommas(app.queryMeasureArea.toFixed(2)) + ' ft' + app.squaredSymbol;
+              app.queryMeasureContainerRadius.innerHTML = numberWithCommas(app.queryMeasureRadius.toFixed(2)) + ' ft';
+            } else if (event.state === "complete") {
+              app.queryingIndicatorContainer.classList.remove('noVisibility');
+              // this polygon will be used to query features that intersect it
+              startQuery(app.queryPolygon);
+
+              app.queryLayer.queryFeatures({
+                geometry: app.queryPolygon,
+                outFields: ['*'],
+                outSpatialReference: app.activeView.spatialReference,
+                returnGeometry: true
+              }).then(function (results) {
+                let graphics = results.features;
+
+                // remove existing highlighted features
+                if (app.highlightedFeature) {
+                  app.highlightedFeature.remove();
+                }
+
+                // highlight query results
+                app.highlightedFeature = layerView.highlight(graphics);
+                // zoom to extent of query polygon, zoomed out by a factor of 2
+                app.activeView.goTo(app.queryPolygon.extent.expand(2));
+              });
+            }
+          });
+
+          app.querySketchWidget.on('update', function (event) {
+            let queryPolygon = event.graphics[0].geometry;
+            if (event.state === 'start' && event.toolEventInfo === null) {
+              // USER SELECTS QUERY POLYGON TO MOVE, SCALE, OR RESHAPE FOR FIRST TIME
+              // FIRST SET POPUP TO NULL TO PREVENT POPUP FROM OPENING WHEN USER CLICKS ON GRAPHIC TO START UPDATE THEN IMMEDIATELY RE-CREATE THE POPUP
+              app.activeView.popup = null;
+              app.activeView.popup = new Popup({
+                dockEnabled: true,
+                dockOptions: {
+                  position: "bottom-right",
+                  breakpoint: {
+                    width: 600,
+                    height: 1000
+                  }
+                }
+              });
+            } else if (event.state === 'active' && (event.toolEventInfo.type === 'scale' || event.toolEventInfo.type === 'reshape')) {
+              // AS USER SCALES OR ROTATES QUERY POLYGON, UPDATE MEASUREMENTS
+              // let queryPolygon = event.graphics[0].geometry;
+              app.queryMeasureArea = geometryEngine.geodesicArea(queryPolygon, 'square-feet');
+              if (app.queryMeasureArea < 0) {
+                // simplify the polygon if needed and calculate the area again
+                let simplifiedPolygon = geometryEngine.simplify(queryPolygon);
+                if (simplifiedPolygon) {
+                  app.queryMeasureArea = geometryEngine.geodesicArea(simplifiedPolygon, "square-feet");
+                }
+              }
+              // if tool is circle also calculate radius
+              if (app.activeQueryPolygonButton === 'circle') {
+                app.queryMeasureRadius = Math.sqrt(app.queryMeasureArea / Math.PI);
+              } else {
+                app.queryMeasureRadius = 0;
+              }
+              app.queryMeasureContainerArea.innerHTML = numberWithCommas(app.queryMeasureArea.toFixed(2)) + ' ft' + app.squaredSymbol;
+              app.queryMeasureContainerRadius.innerHTML = numberWithCommas(app.queryMeasureRadius.toFixed(2)) + ' ft';
+            } else if (event.state === 'active' && (event.toolEventInfo.type === 'move-stop' || event.toolEventInfo.type === 'scale-stop' || event.toolEventInfo.type === 'reshape-stop' || event.toolEventInfo.type === 'rotate-stop')) {
+              // ONCE USER STOPS MOVING, SCALING, OR RESHAPING QUERY POLYGON, EXECUTE THE QUERY
+              app.queryingIndicatorContainer.classList.remove('noVisibility');
+              startQuery(queryPolygon);
+              app.queryLayer.queryFeatures({
+                geometry: queryPolygon,
+                outFields: ['*'],
+                outSpatialReference: app.activeView.spatialReference,
+                returnGeometry: true
+              }).then(function (results) {
+                let graphics = results.features;
+
+                // remove existing highlighted features
+                if (app.highlightedFeature) {
+                  app.highlightedFeature.remove();
+                }
+                // highlight query results
+                app.highlightedFeature = layerView.highlight(graphics);
+                // zoom to extent of query polygon, zoomed out by a factor of 2
+                app.activeView.goTo(queryPolygon.extent.expand(2));
+              });
+            } else if (event.state === 'aborted' || event.state === 'complete') {
+              // USER EITHER COMPLETED THE POLYGON OR CLICKED OFF OF QUERY POLYGON WITHOUT MOVING IT
+              // RE-ENABLE POPUPS
+              try {
                 app.activeView.popup = new Popup({
                   dockEnabled: true,
                   dockOptions: {
@@ -1672,66 +1786,12 @@ require([
                     }
                   }
                 });
-              } else if (event.state === 'active' && (event.toolEventInfo.type === 'scale' || event.toolEventInfo.type === 'reshape')) {
-                // AS USER SCALES OR ROTATES QUERY POLYGON, UPDATE MEASUREMENTS
-                // let queryPolygon = event.graphics[0].geometry;
-                app.queryMeasureArea = geometryEngine.geodesicArea(queryPolygon, 'square-feet');
-                if (app.queryMeasureArea < 0) {
-                  // simplify the polygon if needed and calculate the area again
-                  let simplifiedPolygon = geometryEngine.simplify(queryPolygon);
-                  if (simplifiedPolygon) {
-                    app.queryMeasureArea = geometryEngine.geodesicArea(simplifiedPolygon, "square-feet");
-                  }
-                }
-                // if tool is circle also calculate radius
-                if (app.activeQueryPolygonButton === 'circle') {
-                  app.queryMeasureRadius = Math.sqrt(app.queryMeasureArea / Math.PI);
-                } else {
-                  app.queryMeasureRadius = 0;
-                }
-                app.queryMeasureContainerArea.innerHTML = numberWithCommas(app.queryMeasureArea.toFixed(2)) + ' ft' + app.squaredSymbol;
-                app.queryMeasureContainerRadius.innerHTML = numberWithCommas(app.queryMeasureRadius.toFixed(2)) + ' ft';
-              } else if (event.state === 'active' && (event.toolEventInfo.type === 'move-stop' || event.toolEventInfo.type === 'scale-stop' || event.toolEventInfo.type === 'reshape-stop' || event.toolEventInfo.type === 'rotate-stop')) {
-                // ONCE USER STOPS MOVING, SCALING, OR RESHAPING QUERY POLYGON, EXECUTE THE QUERY
-                app.queryingIndicatorContainer.classList.remove('noVisibility');
-                startQuery(queryPolygon);
-                app.queryLayer.queryFeatures({
-                  geometry: queryPolygon,
-                  outFields: ['*'],
-                  outSpatialReference: app.activeView.spatialReference,
-                  returnGeometry: true
-                }).then(function (results) {
-                  let graphics = results.features;
-      
-                  // remove existing highlighted features
-                  if (app.highlightedFeature) {
-                    app.highlightedFeature.remove();
-                  }
-                  // highlight query results
-                  app.highlightedFeature = layerView.highlight(graphics);
-                  // zoom to extent of query polygon, zoomed out by a factor of 2
-                  app.activeView.goTo(queryPolygon.extent.expand(2));
-                });
-              } else if (event.state === 'cancel' || event.state === 'complete') {
-                // USER EITHER COMPLETED THE POLYGON OR CLICKED OFF OF QUERY POLYGON WITHOUT MOVING IT
-                // RE-ENABLE POPUPS
-                try {
-                  app.activeView.popup = new Popup({
-                    dockEnabled: true,
-                    dockOptions: {
-                      position: "bottom-right",
-                      breakpoint: {
-                        width: 600,
-                        height: 1000
-                      }
-                    }
-                  });
-                } catch (error) {
-                  console.log('Error recreating popup: ', error.message);
-                }
+              } catch (error) {
+                console.log('Error recreating popup: ', error.message);
               }
-            });
+            }
           });
+        });
       }).then(function () {
         app.activeView.watch('extent', () => updateOverviewMapExtent(app.extentIndicator));
         app.overviewMapView.watch('extent', () => updateOverviewMapExtent(app.extentIndicator));
@@ -1747,15 +1807,15 @@ require([
   });
 
 
-  query('#collapseTable').on('shown.bs.collapse', function() {
-    try{
-        if (app.statsTable !== null) {
-            app.statsTable.redraw(true);
-        }            
-    } catch(error) {
-        console.log("Error Message redraw table: ", error.message)
+  query('#collapseTable').on('shown.bs.collapse', function () {
+    try {
+      if (app.statsTable !== null) {
+        app.statsTable.redraw(true);
+      }
+    } catch (error) {
+      console.log("Error Message redraw table: ", error.message)
     }
-});
+  });
 
   // assign element id/class names to app properties
   function assignAppProperties() {
@@ -1898,128 +1958,130 @@ require([
 
     app.screenshot3DButton = document.getElementById(
       "screenshot3DButton"
-      );
+    );
 
     app.screenshot3DSection = document.getElementById(
       "screenshot3DSection"
-      );
+    );
 
     app.screenshot3DDiv = document.getElementById(
       "screenshot3DDiv"
-      );
+    );
 
-      // app.editorWidgetListItem = document.getElementById('editorWidgetListItem');
+    // app.editorWidgetListItem = document.getElementById('editorWidgetListItem');
 
     app.overviewMapToggleBox = document.getElementById(
       'overviewMapToggleBox'
-      );
+    );
 
     app.elevationToggleDiv = document.getElementById(
       "elevationToggleDiv"
-      );
+    );
 
-      app.clusterDiv = document.getElementById(
-        "clusterDiv"
-        );
+    app.clusterDiv = document.getElementById(
+      "clusterDiv"
+    );
 
-      app.elevationToggle = document.getElementById(
-        'elevationToggle'
-        );
+    app.elevationToggle = document.getElementById(
+      'elevationToggle'
+    );
 
-        app.filterToolSelectMenu = document.getElementById('filterToolSelectMenu');
-        app.filterToolSelectMenuLabel = document.getElementById('filterToolSelectMenuLabel');
+    app.filterToolSelectMenu = document.getElementById('filterToolSelectMenu');
+    app.filterToolSelectMenuLabel = document.getElementById('filterToolSelectMenuLabel');
 
-        app.coordinateConversionWarningText = document.getElementById('coordConversionWarning');
+    app.coordinateConversionWarningText = document.getElementById('coordConversionWarning');
+
+    app.attributeTableLayerSelect = document.getElementById('layerSelectMenu');
   }
 
   function findLayerByTitle(title, map) {
-    try{
-        if(map === 'main') {
-            return app.activeView.map.allLayers.find(function (layer) {
-                return layer.title === title;
-            });
-        } else if (map === 'overview') {
-            return app.overviewMapView.map.allLayers.find(function (layer) {
-                return layer.title === title;
-            });
-        } else {
-            console.log('Error, please enter either "main" or "overview"')
-        }
+    try {
+      if (map === 'main') {
+        return app.activeView.map.allLayers.find(function (layer) {
+          return layer.title === title;
+        });
+      } else if (map === 'overview') {
+        return app.overviewMapView.map.allLayers.find(function (layer) {
+          return layer.title === title;
+        });
+      } else {
+        console.log('Error, please enter either "main" or "overview"')
+      }
     } catch (error) {
-        console.log('Error message findLayerByTitle: ', error.message)
-    }        
-}
+      console.log('Error message findLayerByTitle: ', error.message)
+    }
+  }
 
-function startQuery(queryPolygon) {
-  return queryLayerViewStats(queryPolygon).then(function (newData) {
-    updateCharts(newData,
-      'canvasCount'
-    );
-  })
-}
+  function startQuery(queryPolygon) {
+    return queryLayerViewStats(queryPolygon).then(function (newData) {
+      updateCharts(newData,
+        'canvasCount'
+      );
+    })
+  }
 
-// FILTER LAYERS SECTION
-// creates an array of attribute values for all features in the queried layer, then creates a new array of unique values
-function getUniqueValues(response) {
+  // FILTER LAYERS SECTION
+  // creates an array of attribute values for all features in the queried layer, then creates a new array of unique values
+  function getUniqueValues(response) {
     let uniqueValues = [];
     let features = response.features;
     let layerTitle = features[0].layer.title;
     let fieldNameToFilterBy = response.fields[0].name;
     let values = features.map(function (feature) {
-        return feature.attributes[app.filterToolField];
+      return feature.attributes[app.filterToolField];
     });
     // create array of unique values
     values.forEach(function (item) {
-        if (
-            (uniqueValues.length < 1 || uniqueValues.indexOf(item) === -1) && item !== ""
-        ) {
-            uniqueValues.push(item)
-        }
+      if (
+        (uniqueValues.length < 1 || uniqueValues.indexOf(item) === -1) && item !== ""
+      ) {
+        uniqueValues.push(item)
+      }
     });
     // after array of unique attributes has been created add 'empty' value that will be used to clear the definition expression SQL query
     uniqueValues.push("");
     // populate filter dropdown menu with dynamic label
     app.filterToolSelectMenuLabel.innerHTML = "Filter " + "<i>" + layerTitle + "</i>" + " By " + "<i>" + fieldNameToFilterBy + "</i>";
     return uniqueValues;
-}
-// receives array of unique values and then creates html option elements that are added to dropdown menu
-function addToSelectMenu(uniqueValues) {
+  }
+  // receives array of unique values and then creates html option elements that are added to dropdown menu
+  function addToSelectMenu(uniqueValues) {
     let i;
     // clear existing options if needed
-    if(app.filterToolSelectMenu.options.length > 0) {
-        for (i=app.filterToolSelectMenu.options.length -1;i>=0;i--){
-            app.filterToolSelectMenu.remove(i);
-        }
+    if (app.filterToolSelectMenu.options.length > 0) {
+      for (i = app.filterToolSelectMenu.options.length - 1; i >= 0; i--) {
+        app.filterToolSelectMenu.remove(i);
+      }
     }
     uniqueValues.sort();
 
     uniqueValues.forEach(function (value) {
-        let option = document.createElement('option');
-        if (value === "") {
-            option.text = 'No Filter';
-            option.value = "";
-            app.filterToolSelectMenu.add(option);
-        } else {
-            option.text = value;
-            app.filterToolSelectMenu.add(option)
-        }
+      let option = document.createElement('option');
+      if (value === "") {
+        option.text = 'No Filter';
+        option.value = "";
+        app.filterToolSelectMenu.add(option);
+      } else {
+        option.text = value;
+        app.filterToolSelectMenu.add(option)
+      }
     });
     return setFilterLayerDefinitionExpression(app.filterToolSelectMenu.value)
-}
-// creates a definition expression SQL query to filter layer
-function setFilterLayerDefinitionExpression(value) {
+  }
+  // creates a definition expression SQL query to filter layer
+  function setFilterLayerDefinitionExpression(value) {
     if (value === "") {
-        app.filterToolLayer.definitionExpression = null;
-        app.filterToolLayerOverviewMap.definitionExpression = null;
+      app.filterToolLayer.definitionExpression = null;
+      app.filterToolLayerOverviewMap.definitionExpression = null;
     } else {
-        try {
-            app.filterToolLayer.definitionExpression = app.filterToolField + " = '" + value + "'";
-            app.filterToolLayerOverviewMap.definitionExpression = app.filterToolField + " = '" + value + "'";
-        } catch(error) {
-            console.log('Error message setFilterLayerDefinitionExpression: ', error.message)
-        }
+      try {
+        app.filterToolLayer.definitionExpression = app.filterToolField + " = '" + value + "'";
+        app.filterToolLayerOverviewMap.definitionExpression = app.filterToolField + " = '" + value + "'";
+      } catch (error) {
+        console.log('Error message setFilterLayerDefinitionExpression: ', error.message)
+      }
     }
-}
+  }
 
   function updateOverviewMapExtent(extentIndicator) {
     let extent, bottomLeft, topRight;
@@ -2110,23 +2172,23 @@ function setFilterLayerDefinitionExpression(value) {
     app.smartPhonesLandscape = window.matchMedia("(min-width: 481px) and (max-width: 767px)");
 
     if (app.smartPhonesPortrait.matches ||
-        app.smartPhonesLandscape.matches ||
-        app.ipadPro125Landscape.matches ||
-        app.ipadPro125Portrait.matches ||
-        app.ipadPro105Landscape.matches ||
-        app.ipadPro105Portrait.matches ||
-        app.ipad3497.matches ||
-        app.ipad12MiniAir.matches) {
-        console.log('On phone')
+      app.smartPhonesLandscape.matches ||
+      app.ipadPro125Landscape.matches ||
+      app.ipadPro125Portrait.matches ||
+      app.ipadPro105Landscape.matches ||
+      app.ipadPro105Portrait.matches ||
+      app.ipad3497.matches ||
+      app.ipad12MiniAir.matches) {
+      console.log('On phone')
     } else {
-        console.log('On desktop')
-            // if overviewDiv is hidden by user, turn it back on
-        if ($('#overviewMap').is(':hidden')) {
-            $('#overviewMap').show();
+      console.log('On desktop')
+      // if overviewDiv is hidden by user, turn it back on
+      if ($('#overviewMap').is(':hidden')) {
+        $('#overviewMap').show();
 
-        }
+      }
     }
-}
+  }
 
   function setActiveWidget2D(type) {
     let distanceDiv, distanceDivArea;
@@ -2440,10 +2502,10 @@ function setFilterLayerDefinitionExpression(value) {
   }
 
   function toggleElevation(ev) {
-        app.map.ground.layers.forEach(function(layer) {
-            layer.visible = ev.target.checked;
-        });
-    }
+    app.map.ground.layers.forEach(function (layer) {
+      layer.visible = ev.target.checked;
+    });
+  }
 
   // Views
   function syncViews(fromView, toView) {

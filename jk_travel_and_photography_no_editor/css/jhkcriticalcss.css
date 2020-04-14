@@ -88,4 +88,21 @@ body {
   background-color: rgba(0, 0, 0, 0.75);
 }
 
+#panelAttributeTable {
+  width: 40vw;
+}
+
+#panelAttributeTable>#collapseAttributeTable>.panel-body {
+  width: 100%;
+  height: 100vh;
+}
+
+#layerSelectDivLabel {
+  color: black;
+}
+
+#layerSelectMenu {
+  color: black;
+}
+
 /*# sourceMappingURL=jhkcriticalcss.css.map */

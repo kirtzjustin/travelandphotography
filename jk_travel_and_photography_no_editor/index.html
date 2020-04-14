@@ -19,7 +19,7 @@
   <!-- JHK Critical CSS  -->
   <link rel="stylesheet" href="./css/jhkcriticalcss.min.css">
   <!-- ArcGIS JS 4 -->
-  <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/css/main.css">
+  <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/css/main.css">
   <!-- JHK JS Scripts -->
   <script type='text/javascript' src='./js/addalphatocolor.min.js'></script>
   <script type='text/javascript' src='./js/resettabulatortable.min.js'></script>
@@ -67,6 +67,8 @@
             2D</a></li>
         <li><a class="hidden-md hidden-lg" href="#sceneTab" aria-controls="sceneTab" role="tab" data-toggle="tab">
             3D</a></li>
+            <li><a role="menuitem" tabindex="0" data-target="#panelAttributeTable" aria-haspopup="true"><span
+              class="esri-icon esri-icon-table"></span> Attribute Table</a></li>
         <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps" aria-haspopup="true"><span
               class="glyphicon glyphicon-th-large"></span> Basemaps</a></li>
         <li><a role="menuitem" tabindex="0" data-target="#panelCoordinateConversion" aria-haspopup="true"><span
@@ -230,6 +232,27 @@
       <div id="collapseBasemaps" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingBasemaps">
         <div class="panel-body">
           <div id='basemapGallery'></div>
+        </div>
+      </div>
+    </div>
+    <!-- Attribute Table Panel -->
+    <div id="panelAttributeTable" class="panel collapse">
+      <div id="headingAttributeTable" class="panel-heading" role="tab">
+        <div class="panel-title">
+          <a class="panel-toggle collapsed" role="button" data-toggle="collapse" href="#collapseAttributeTable"
+            aria-expanded="false" aria-controls="collapseAttributeTable"><span class="esri-icon esri-icon-table"
+              aria-hidden="true"></span><span class="panel-label">Attribute Table</span></a>
+          <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelAttributeTable"><span
+              class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
+        </div>
+      </div>
+      <div id="collapseAttributeTable" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingAttributeTable">
+        <div id='attributeTablePanelBody' class="panel-body">
+          <div id='layerSelectDiv'>
+            <label id='layerSelectDivLabel' for='layerSelectMenu'>Select Layer</label>
+            <select id='layerSelectMenu'></select>
+          </div>
+          <div id='attributeTable'></div>
         </div>
       </div>
     </div>
@@ -798,7 +821,7 @@
   <!-- dojoConfig -->
   <script type="text/javascript" src="./js/dojoConfig.min.js"></script>
   <!-- ArcGIS JS 4 -->
-  <script type="text/javascript" src="https://js.arcgis.com/4.14/"></script>
+  <script type="text/javascript" src="https://js.arcgis.com/4.15/"></script>
   <!-- main app JS files -->
   <script type="text/javascript" src="./js/jkapp.min.js"></script>
   <script type="text/javascript" src="./js/geometryquerylogic.min.js"></script>
