@@ -257,7 +257,8 @@ require([
     attributeTableLayerSelect: null,
     attributeTable: null,
     attributeTableLayer: null,
-    attributeTableFieldConfig: []
+    attributeTableFieldConfig: [],
+    highlights: []
   }
   // graphics laye for sketch widget
   app.sketchWidgetGraphicsLayer = new GraphicsLayer({
@@ -1089,12 +1090,80 @@ require([
           container: document.getElementById('attributeTable'),
           // attachmentsEnabled: true
         });
+
+        // add Zoom To Selected Features Button To Table Controls dropdown
+        if ($('.esri-feature-table__menu-accordion #zoomTo').length === 0) {
+          let tableControls = document.getElementsByClassName('esri-feature-table__menu-accordion').item(0);
+          let li = document.createElement('li');
+          let button = document.createElement('button');
+          let span = document.createElement('span');
+
+          li.id = 'zoomTo'
+          li.classList.add('esri-feature-table__menu-item')
+          li.setAttribute('role', 'menuitem')
+          button.classList.add('esri-feature-table__button', 'esri-feature-table__menu-item-label');
+          button.id = 'zoomToButton';
+          span.classList.add('esri-feature-table__menu-item-label__content');
+          span.innerHTML = 'Zoom To Selected Feature'
+          button.appendChild(span)
+          li.appendChild(button)
+          tableControls.appendChild(li)
+        }
+
+        // Get the FeatureLayer's layerView and listen for the table's selection-change event
+        app.activeView.whenLayerView(app.attributeTableLayer).then(function (layerView) {
+          app.attributeTable.on("selection-change", function (changes) {
+            // If the selection is removed remove its highlighted feature from the layerView
+            changes.removed.forEach(function (item) {
+              const data = app.highlights.find(function (data) {
+                return data.feature === item.feature;
+              });
+              if (data) {
+                app.highlights.splice(app.highlights.indexOf(data), 1);
+                data.highlight.remove();
+              }
+            });
+
+            // If the selection is added, push all added selections to array and highlight on layerView
+            changes.added.forEach(function (item) {
+              const feature = item.feature;
+              highlight = layerView.highlight(item.feature);
+              app.highlights.push({
+                feature: feature,
+                highlight: highlight
+              });
+            });
+          });
+
+          document.getElementById('zoomToButton').addEventListener("click", zoomToSelectedFeature);
+
+          // fires when "Zoom to selected feature" button is clicked
+          function zoomToSelectedFeature() {
+            // Create a query off of the feature layer
+            const query = app.attributeTableLayer.createQuery();
+            // Iterate through the highlights and grab the feature's objectID
+            const featureIds = app.highlights.map(function (result) {
+              return result.feature.getAttribute(app.attributeTableLayer.objectIdField);
+            });
+            // Set the query's objectId
+            query.objectIds = featureIds;
+            // Make sure to return the geometry to zoom to
+            query.returnGeometry = true;
+            // Call queryFeatures on the feature layer and zoom to the resulting features
+            app.attributeTableLayer.queryFeatures(query).then(function (results) {
+              app.activeView.goTo(results.features).catch(function (error) {
+                if (error.name != "AbortError") {
+                  console.error(error);
+                }
+              });
+            });
+          }
+        });
+
       } catch (e) {
         console.log('Error Message: Attribute Table: ', e.mesage)
       }
-
     });
-
   }).then(function () {
     app.activeView.watch('extent', () => updateOverviewMapExtent(app.extentIndicator));
     app.overviewMapView.watch('extent', () => updateOverviewMapExtent(app.extentIndicator));
@@ -1481,6 +1550,90 @@ require([
             }
           });
         });
+
+        // if attribute table already exists, destroy it and recreate the attribute table div
+        if (app.attributeTable) {
+          app.attributeTable.destroy();
+          let panelBody = document.getElementById('attributeTablePanelBody');
+          let attributeTable = document.createElement('div');
+          attributeTable.id = 'attributeTable';
+          panelBody.appendChild(attributeTable);
+        }
+        // create attribute table
+        app.attributeTable = new FeatureTable({
+          layer: app.attributeTableLayer,
+          fieldConfigs: app.attributeTableFieldConfig,
+          container: document.getElementById('attributeTable'),
+          // attachmentsEnabled: true
+        });
+        // add Zoom To Selected Features Button To Table Controls dropdown
+        if ($('.esri-feature-table__menu-accordion #zoomTo').length === 0) {
+          let tableControls = document.getElementsByClassName('esri-feature-table__menu-accordion').item(0);
+          let li = document.createElement('li');
+          let button = document.createElement('button');
+          let span = document.createElement('span');
+
+          li.id = 'zoomTo'
+          li.classList.add('esri-feature-table__menu-item')
+          li.setAttribute('role', 'menuitem')
+          button.classList.add('esri-feature-table__button', 'esri-feature-table__menu-item-label');
+          button.id = 'zoomToButton';
+          span.classList.add('esri-feature-table__menu-item-label__content');
+          span.innerHTML = 'Zoom To Selected Feature'
+          button.appendChild(span)
+          li.appendChild(button)
+          tableControls.appendChild(li)
+        }
+
+        // Get the FeatureLayer's layerView and listen for the table's selection-change event
+        app.activeView.whenLayerView(app.attributeTableLayer).then(function (layerView) {
+          app.attributeTable.on("selection-change", function (changes) {
+            // If the selection is removed remove its highlighted feature from the layerView
+            changes.removed.forEach(function (item) {
+              const data = app.highlights.find(function (data) {
+                return data.feature === item.feature;
+              });
+              if (data) {
+                app.highlights.splice(app.highlights.indexOf(data), 1);
+                data.highlight.remove();
+              }
+            });
+
+            // If the selection is added, push all added selections to array and highlight on layerView
+            changes.added.forEach(function (item) {
+              const feature = item.feature;
+              highlight = layerView.highlight(item.feature);
+              app.highlights.push({
+                feature: feature,
+                highlight: highlight
+              });
+            });
+          });
+
+          document.getElementById('zoomToButton').addEventListener("click", zoomToSelectedFeature);
+
+          // fires when "Zoom to selected feature" button is clicked
+          function zoomToSelectedFeature() {
+            // Create a query off of the feature layer
+            const query = app.attributeTableLayer.createQuery();
+            // Iterate through the highlights and grab the feature's objectID
+            const featureIds = app.highlights.map(function (result) {
+              return result.feature.getAttribute(app.attributeTableLayer.objectIdField);
+            });
+            // Set the query's objectId
+            query.objectIds = featureIds;
+            // Make sure to return the geometry to zoom to
+            query.returnGeometry = true;
+            // Call queryFeatures on the feature layer and zoom to the resulting features
+            app.attributeTableLayer.queryFeatures(query).then(function (results) {
+              app.activeView.goTo(results.features).catch(function (error) {
+                if (error.name != "AbortError") {
+                  console.error(error);
+                }
+              });
+            });
+          }
+        });
       }).then(function () {
         app.activeView.watch('extent', () => updateOverviewMapExtent(app.extentIndicator));
         app.overviewMapView.watch('extent', () => updateOverviewMapExtent(app.extentIndicator));
@@ -1574,6 +1727,91 @@ require([
         app.printWidgetDiv.classList.add('hidden');
         app.elevationToggleDiv.classList.remove('hidden');
         app.clusterDiv.classList.add('hidden');
+
+        // if attribute table already exists, destroy it and recreate the attribute table div
+        if (app.attributeTable) {
+          app.attributeTable.destroy();
+          let panelBody = document.getElementById('attributeTablePanelBody');
+          let attributeTable = document.createElement('div');
+          attributeTable.id = 'attributeTable';
+          panelBody.appendChild(attributeTable);
+        }
+        // create attribute table
+        app.attributeTable = new FeatureTable({
+          layer: app.attributeTableLayer,
+          fieldConfigs: app.attributeTableFieldConfig,
+          container: document.getElementById('attributeTable'),
+          // attachmentsEnabled: true
+        });
+
+        // add Zoom To Selected Features Button To Table Controls dropdown
+        if ($('.esri-feature-table__menu-accordion #zoomTo').length === 0) {
+          let tableControls = document.getElementsByClassName('esri-feature-table__menu-accordion').item(0);
+          let li = document.createElement('li');
+          let button = document.createElement('button');
+          let span = document.createElement('span');
+
+          li.id = 'zoomTo'
+          li.classList.add('esri-feature-table__menu-item')
+          li.setAttribute('role', 'menuitem')
+          button.classList.add('esri-feature-table__button', 'esri-feature-table__menu-item-label');
+          button.id = 'zoomToButton';
+          span.classList.add('esri-feature-table__menu-item-label__content');
+          span.innerHTML = 'Zoom To Selected Feature'
+          button.appendChild(span)
+          li.appendChild(button)
+          tableControls.appendChild(li)
+        }
+
+        // Get the FeatureLayer's layerView and listen for the table's selection-change event
+        app.activeView.whenLayerView(app.attributeTableLayer).then(function (layerView) {
+          app.attributeTable.on("selection-change", function (changes) {
+            // If the selection is removed remove its highlighted feature from the layerView
+            changes.removed.forEach(function (item) {
+              const data = app.highlights.find(function (data) {
+                return data.feature === item.feature;
+              });
+              if (data) {
+                app.highlights.splice(app.highlights.indexOf(data), 1);
+                data.highlight.remove();
+              }
+            });
+
+            // If the selection is added, push all added selections to array and highlight on layerView
+            changes.added.forEach(function (item) {
+              const feature = item.feature;
+              highlight = layerView.highlight(item.feature);
+              app.highlights.push({
+                feature: feature,
+                highlight: highlight
+              });
+            });
+          });
+
+          document.getElementById('zoomToButton').addEventListener("click", zoomToSelectedFeature);
+
+          // fires when "Zoom to selected feature" button is clicked
+          function zoomToSelectedFeature() {
+            // Create a query off of the feature layer
+            const query = app.attributeTableLayer.createQuery();
+            // Iterate through the highlights and grab the feature's objectID
+            const featureIds = app.highlights.map(function (result) {
+              return result.feature.getAttribute(app.attributeTableLayer.objectIdField);
+            });
+            // Set the query's objectId
+            query.objectIds = featureIds;
+            // Make sure to return the geometry to zoom to
+            query.returnGeometry = true;
+            // Call queryFeatures on the feature layer and zoom to the resulting features
+            app.attributeTableLayer.queryFeatures(query).then(function (results) {
+              app.activeView.goTo(results.features).catch(function (error) {
+                if (error.name != "AbortError") {
+                  console.error(error);
+                }
+              });
+            });
+          }
+        });
 
 
         // 3d screenshot section
